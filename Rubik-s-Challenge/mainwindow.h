@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "openglwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 QT_END_NAMESPACE
 
@@ -19,5 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    OpenGLWidget *m_OpenGLWidget {nullptr};
+
 };
 #endif // MAINWINDOW_H
