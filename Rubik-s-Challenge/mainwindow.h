@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 #include "openglwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +22,9 @@ public:
 private:
     Ui::MainWindow *ui;
     OpenGLWidget *m_OpenGLWidget {nullptr};
+
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 
 };
 #endif // MAINWINDOW_H
