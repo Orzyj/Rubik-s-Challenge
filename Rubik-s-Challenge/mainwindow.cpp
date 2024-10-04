@@ -18,3 +18,28 @@ MainWindow::~MainWindow()
 
     delete ui;
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    const int key = event->key();
+    const Qt::KeyboardModifiers modifier = event->modifiers();
+
+    //rotating camera
+    if(modifier & Qt::ControlModifier) {
+        switch(key) {
+        case Qt::Key_Left:
+            qDebug() << "lewo";
+            break;
+        case Qt::Key_Right:
+            break;
+        case Qt::Key_Up:
+            break;
+        case Qt::Key_Down:
+            break;
+        }
+    }
+
+
+
+    QMainWindow::keyPressEvent(event);
+}

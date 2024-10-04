@@ -24,6 +24,8 @@ private:
     QMatrix4x4 m_modelViewMatrix;
 
     void drawCube();
+
+
 };
 
 #endif // OPENGLWIDGET_H
