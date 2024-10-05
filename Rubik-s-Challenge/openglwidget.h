@@ -7,12 +7,17 @@
 #include <QMatrix4x4>
 #include <QTimer>
 
+#include "cube.h"
+
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
     OpenGLWidget(QWidget* parent  = nullptr);
     ~OpenGLWidget();
+
+    void onRotateAngelX(float x);
+    void onRotateAngelY(float y);
 
 protected:
     void initializeGL() override;
@@ -22,8 +27,14 @@ protected:
 private:
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_modelViewMatrix;
+    QVector<Cube*> m_cubes;
 
-    void drawCube();
+    float m_rotateAngelCubeX { 0.f };
+    float m_rotateAngelCubeY { 0.f };
+    bool m_isIncreaseX { false };
+    bool m_isIncreaseY { false };
+
+    void rotate(float& value, bool& flag, float op_value);
 
 
 };

@@ -23,23 +23,25 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     const int key = event->key();
     const Qt::KeyboardModifiers modifier = event->modifiers();
+    const float rotate = 3.f;
 
     //rotating camera
     if(modifier & Qt::ControlModifier) {
         switch(key) {
         case Qt::Key_Left:
-            qDebug() << "lewo";
+            m_OpenGLWidget->onRotateAngelY(rotate);
             break;
         case Qt::Key_Right:
+            m_OpenGLWidget->onRotateAngelY(-rotate);
             break;
         case Qt::Key_Up:
+            m_OpenGLWidget->onRotateAngelX(-rotate);
             break;
         case Qt::Key_Down:
+            m_OpenGLWidget->onRotateAngelX(rotate);
             break;
+        default:
+            QMainWindow::keyPressEvent(event);
         }
     }
-
-
-
-    QMainWindow::keyPressEvent(event);
 }

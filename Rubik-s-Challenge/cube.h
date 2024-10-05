@@ -3,8 +3,9 @@
 
 #include <QVector3D>
 #include <QMatrix4x4>
+#include <QOpenGLFunctions>
 
-class Cube
+class Cube : protected QOpenGLFunctions
 {
 public:
     Cube(QVector3D position);
