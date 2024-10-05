@@ -2,11 +2,15 @@
 
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent) {
+
+    m_formatAliasing.setSamples(m_samples);
+    QSurfaceFormat::setDefaultFormat(m_formatAliasing);
+
     for (int x = -1; x <= 1; ++x) {
         for (int y = -1; y <= 1; ++y) {
             for (int z = -1; z <= 1; ++z) {
                 QVector3D position(x * 2.1f, y * 2.1f, z * 2.1f);
-                m_cubes.append(new Cube(position));
+                m_cubes.append(new Cube(position, x + 1, y + 1, z + 1));
             }
         }
     }
@@ -21,6 +25,7 @@ OpenGLWidget::~OpenGLWidget()
 void OpenGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 1.0);
 }
