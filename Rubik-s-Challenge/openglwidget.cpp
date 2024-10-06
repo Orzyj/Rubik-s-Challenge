@@ -86,12 +86,10 @@ void OpenGLWidget::rotate(float& valueAxis, bool& flag, float op_value)
 
 void OpenGLWidget::onRotateAngelX(float x)
 {
-    qDebug() << "x";
     rotate(m_rotateAngelCubeX, m_isIncreaseX, x);
 }
 
 void OpenGLWidget::onRotateAngelY(float y)
 {
-    qDebug() << "y";
     rotate(m_rotateAngelCubeY, m_isIncreaseY, y);
 }

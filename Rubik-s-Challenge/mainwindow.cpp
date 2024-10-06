@@ -21,27 +21,37 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    const int key = event->key();
-    const Qt::KeyboardModifiers modifier = event->modifiers();
-    const float rotate = 3.f;
+    if(event->type() == QEvent::KeyPress) {
+        const int key = event->key();
+        const Qt::KeyboardModifiers modifier = event->modifiers();
+        const float rotate = 6.f;
 
-    //rotating camera
-    if(modifier & Qt::ControlModifier) {
-        switch(key) {
-        case Qt::Key_Left:
-            m_OpenGLWidget->onRotateAngelY(rotate);
-            break;
-        case Qt::Key_Right:
-            m_OpenGLWidget->onRotateAngelY(-rotate);
-            break;
-        case Qt::Key_Up:
-            m_OpenGLWidget->onRotateAngelX(-rotate);
-            break;
-        case Qt::Key_Down:
-            m_OpenGLWidget->onRotateAngelX(rotate);
-            break;
-        default:
-            QMainWindow::keyPressEvent(event);
+        if(modifier & Qt::ControlModifier) {
+            if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateAngelY(rotate);
+            if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);
+            if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateAngelX(-rotate);
+            if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateAngelX(rotate);
         }
     }
 }
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        qDebug() << "Left mouse button pressed!";
+    }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        qDebug() << "Left mouse button released!";
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug() << "Mouse moved to: " << event->pos();
+}
+
+
