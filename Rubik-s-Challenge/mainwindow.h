@@ -26,6 +26,7 @@ private:
 
     bool m_isInWindowFocus {false};
     QPoint m_basePoint;
+    const int sensitivityThreshold {3};
 
 
 protected:

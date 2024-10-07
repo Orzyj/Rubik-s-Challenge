@@ -61,8 +61,23 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if(m_isInWindowFocus) {
-        qDebug() << m_basePoint;
+    if (m_isInWindowFocus) {
+        QPoint newPosition = event->pos();
+        const float rotateSpeed = 0.3f;
+
+        int dx = newPosition.x() - m_basePoint.x();
+        int dy = newPosition.y() - m_basePoint.y();
+
+        if (abs(dx) > sensitivityThreshold || abs(dy) > sensitivityThreshold) {
+
+            float angleX = rotateSpeed * dy;
+            float angleY = rotateSpeed * dx;
+
+            m_OpenGLWidget->onRotateAngelX(angleX);
+            m_OpenGLWidget->onRotateAngelY(angleY);
+
+            m_basePoint = newPosition;
+        }
     }
 }
 
