@@ -37,21 +37,33 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
-        qDebug() << "Left mouse button pressed!";
+    QRect geometry = m_OpenGLWidget->geometry();
+    QPoint mousePosition = event->pos();
+    int openGLHeight = m_OpenGLWidget->height();
+    int openGLWidth = m_OpenGLWidget->width();
+
+    if(event->button() == Qt::LeftButton &&
+    ((mousePosition.x() > geometry.x()) &&
+    (mousePosition.x() < geometry.x() + openGLWidth)) &&
+    ((mousePosition.y() > geometry.y()) &&
+    (mousePosition.y() < geometry.y() + openGLHeight))) {
+        m_isInWindowFocus = true;
+        m_basePoint = mousePosition;
     }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        qDebug() << "Left mouse button released!";
+        m_isInWindowFocus = false;
     }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "Mouse moved to: " << event->pos();
+    if(m_isInWindowFocus) {
+        qDebug() << m_basePoint;
+    }
 }
 
 

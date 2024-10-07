@@ -24,6 +24,10 @@ private:
     Ui::MainWindow *ui;
     OpenGLWidget *m_OpenGLWidget {nullptr};
 
+    bool m_isInWindowFocus {false};
+    QPoint m_basePoint;
+
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
