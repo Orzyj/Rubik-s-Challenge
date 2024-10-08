@@ -25,6 +25,9 @@ void MainWindow::baseConfiguration()
     m_reversalAxisX = ui->chkboxAxisX->isChecked();
     m_reversalAxisY = ui->chkboxAxisY->isChecked();
 
+    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisXCorrdinatesChanged, this, &MainWindow::onLabelXTextChanged);
+    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisYCorrdinatesChanged, this, &MainWindow::onLabelYTextChanged);
+
     QMainWindow::connect(ui->chkboxAxisX, &QCheckBox::stateChanged, this, [this](){
         m_reversalAxisX = ui->chkboxAxisX->isChecked();
     });
@@ -96,4 +99,14 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void MainWindow::onLabelXTextChanged(const float value)
+{
+    const QString valueTxt = tr("Wartość osi X: ") + QString::number(value);
+    ui->lblXCor->setText(valueTxt);
+}
 
+void MainWindow::onLabelYTextChanged(const float value)
+{
+    const QString valueTxt = tr("Wartość osi Y: ") + QString::number(value);
+    ui->lblYCor->setText(valueTxt);
+}

@@ -25,6 +25,10 @@ protected:
     void resizeGL(int width, int height) override;
     void paintGL() override;
 
+signals:
+    void axisXCorrdinatesChanged(float x);
+    void axisYCorrdinatesChanged(float y);
+
 private:
     int m_samples = 6;
     QSurfaceFormat m_formatAliasing;

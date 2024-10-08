@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QLabel>
 #include "openglwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -31,6 +32,10 @@ private:
     bool m_reversalAxisY;
 
     void baseConfiguration();
+
+private slots:
+    void onLabelXTextChanged(const float value);
+    void onLabelYTextChanged(const float value);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

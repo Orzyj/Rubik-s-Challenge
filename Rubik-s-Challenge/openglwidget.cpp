@@ -87,9 +87,11 @@ void OpenGLWidget::rotate(float& valueAxis, bool& flag, float op_value)
 void OpenGLWidget::onRotateAngelX(float x)
 {
     rotate(m_rotateAngelCubeX, m_isIncreaseX, x);
+    emit axisXCorrdinatesChanged(m_rotateAngelCubeX);
 }
 
 void OpenGLWidget::onRotateAngelY(float y)
 {
     rotate(m_rotateAngelCubeY, m_isIncreaseY, y);
+    emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
 }
