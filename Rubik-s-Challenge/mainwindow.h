@@ -26,8 +26,11 @@ private:
 
     bool m_isInWindowFocus {false};
     QPoint m_basePoint;
-    const int sensitivityThreshold {3};
+    const int m_sensitivityThreshold {3};
+    bool m_reversalAxisX;
+    bool m_reversalAxisY;
 
+    void baseConfiguration();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

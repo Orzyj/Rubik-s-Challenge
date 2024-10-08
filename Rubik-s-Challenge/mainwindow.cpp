@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->m_OpenGLWidget = new OpenGLWidget(this);
 
-    ui->frameOpenGL->layout()->addWidget(m_OpenGLWidget);
+    baseConfiguration();
 }
 
 MainWindow::~MainWindow()
@@ -17,6 +17,21 @@ MainWindow::~MainWindow()
         delete m_OpenGLWidget;
 
     delete ui;
+}
+
+void MainWindow::baseConfiguration()
+{
+    ui->frameOpenGL->layout()->addWidget(m_OpenGLWidget);
+    m_reversalAxisX = ui->chkboxAxisX->isChecked();
+    m_reversalAxisY = ui->chkboxAxisY->isChecked();
+
+    QMainWindow::connect(ui->chkboxAxisX, &QCheckBox::stateChanged, this, [this](){
+        m_reversalAxisX = ui->chkboxAxisX->isChecked();
+    });
+
+    QMainWindow::connect(ui->chkboxAxisY, &QCheckBox::stateChanged, this, [this](){
+        m_reversalAxisY = ui->chkboxAxisY->isChecked();
+    });
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -68,13 +83,13 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         int dx = newPosition.x() - m_basePoint.x();
         int dy = newPosition.y() - m_basePoint.y();
 
-        if (abs(dx) > sensitivityThreshold || abs(dy) > sensitivityThreshold) {
+        if (abs(dx) > m_sensitivityThreshold || abs(dy) > m_sensitivityThreshold) {
 
-            float angleX = rotateSpeed * dy;
-            float angleY = rotateSpeed * dx;
+            float angleX = rotateSpeed * dy * (m_reversalAxisX ? -1 : 1);
+            float angleY = rotateSpeed * dx * (m_reversalAxisY ? -1 : 1);
 
-            m_OpenGLWidget->onRotateAngelX(angleX);
-            m_OpenGLWidget->onRotateAngelY(angleY);
+            m_OpenGLWidget->onRotateAngelX(-angleX);
+            m_OpenGLWidget->onRotateAngelY(-angleY);
 
             m_basePoint = newPosition;
         }
