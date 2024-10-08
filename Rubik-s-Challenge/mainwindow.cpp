@@ -44,11 +44,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         const Qt::KeyboardModifiers modifier = event->modifiers();
         const float rotate = 6.f;
 
+
         if(modifier & Qt::ControlModifier) {
             if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateAngelY(rotate);
             if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);
             if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateAngelX(-rotate);
             if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateAngelX(rotate);
+        } else {
+            if(key == Qt::Key_Left)     m_OpenGLWidget->onColumnSelectedChanged(-1);
+            if(key == Qt::Key_Right)    m_OpenGLWidget->onColumnSelectedChanged(1);
+            if(key == Qt::Key_Up)       m_OpenGLWidget->onRowSelectedChanged(1);
+            if(key == Qt::Key_Down)     m_OpenGLWidget->onRowSelectedChanged(-1);
         }
     }
 }

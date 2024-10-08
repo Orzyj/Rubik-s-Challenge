@@ -80,3 +80,46 @@ void OpenGLWidget::onRotateAngelY(float y)
     rotate(m_rotateAngelCubeY, y);
     emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
 }
+
+void OpenGLWidget::onRowSelectedChanged(int op_value)
+{
+    int id_row = m_rowSelected;
+    id_row += op_value;
+
+    if(id_row >= 2)
+        id_row = 2;
+    else if (id_row <= 0)
+        id_row = 0;
+
+    m_rowSelected = id_row;
+    qDebug() << id_row;
+
+}
+
+void OpenGLWidget::onColumnSelectedChanged(int op_value)
+{
+    int id_column = m_columnSelected;
+    id_column += op_value;
+
+    if(id_column >= 2)
+        id_column = 2;
+    else if (id_column <= 0)
+        id_column = 0;
+
+    m_columnSelected = id_column;
+    qDebug() << id_column;
+}
+
+std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
+{
+    std::vector<Cube*> cubes;
+
+    for(Cube* cube : m_cubes) {
+        if((type == ROTATION_BY::ROWS && cube->id_y == id) ||
+            (type == ROTATION_BY::COLUMNS && cube->id_x == id)) {
+            cubes.push_back(cube);
+        }
+    }
+    return cubes;
+}
+
