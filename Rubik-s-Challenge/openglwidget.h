@@ -42,7 +42,7 @@ private:
     bool m_isIncreaseX { false };
     bool m_isIncreaseY { false };
 
-    void rotate(float& value, bool& flag, float op_value);
+    void rotate(float& value, float op_value);
 
 
 };

@@ -91,8 +91,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             float angleX = rotateSpeed * dy * (m_reversalAxisX ? -1 : 1);
             float angleY = rotateSpeed * dx * (m_reversalAxisY ? -1 : 1);
 
-            m_OpenGLWidget->onRotateAngelX(-angleX);
-            m_OpenGLWidget->onRotateAngelY(-angleY);
+            m_OpenGLWidget->onRotateAngelX(angleX);
+            m_OpenGLWidget->onRotateAngelY(angleY);
 
             m_basePoint = newPosition;
         }

@@ -63,35 +63,20 @@ void OpenGLWidget::paintGL()
     }
 }
 
-void OpenGLWidget::rotate(float& valueAxis, bool& flag, float op_value)
+void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
-    float max = 360.f, min = -360.f;
-    if(flag) {
-        valueAxis += op_value;
-
-        if(valueAxis >= max) {
-            valueAxis = max;
-            flag = false;
-        }
-    } else {
-        valueAxis -= op_value;
-
-        if(valueAxis <= min) {
-            valueAxis = min;
-            flag = true;
-        }
-    }
+    valueAxis += op_value;
     update();
 }
 
 void OpenGLWidget::onRotateAngelX(float x)
 {
-    rotate(m_rotateAngelCubeX, m_isIncreaseX, x);
+    rotate(m_rotateAngelCubeX, x);
     emit axisXCorrdinatesChanged(m_rotateAngelCubeX);
 }
 
 void OpenGLWidget::onRotateAngelY(float y)
 {
-    rotate(m_rotateAngelCubeY, m_isIncreaseY, y);
+    rotate(m_rotateAngelCubeY, y);
     emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
 }
