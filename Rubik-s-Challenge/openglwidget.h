@@ -16,11 +16,11 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
+
     enum ROTATION_BY {
         COLUMNS = 1,
         ROWS = 0
     };
-
 
     OpenGLWidget(QWidget* parent  = nullptr);
     ~OpenGLWidget();

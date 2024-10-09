@@ -14,6 +14,13 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
             }
         }
     }
+
+    for(int i = 0; i < m_cubes.count(); i++) {
+        if(m_cubes[i]->id_y == 1)
+            m_cubes[i]->isSelected = true;
+        if(m_cubes[i]->id_x == 1)
+            m_cubes[i]->isSelected = true;
+    }
 }
 
 OpenGLWidget::~OpenGLWidget()
