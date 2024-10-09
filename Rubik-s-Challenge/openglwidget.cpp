@@ -70,6 +70,28 @@ void OpenGLWidget::paintGL()
     }
 }
 
+void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value)
+{
+    int id = idColOrRow;
+    id += op_value;
+
+    if(id >= 2)         id = 2;
+    else if(id <= 0)    id = 0;
+
+    idColOrRow = id;
+
+    for(Cube* cube : m_cubes){
+        cube->isSelected = false;
+    }
+
+    for(Cube* cube : m_cubes) {
+        if(cube->id_x == m_columnSelected)  cube->isSelected = true;
+        if(cube->id_y == m_rowSelected)     cube->isSelected = true;
+    }
+
+    update();
+}
+
 void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
     valueAxis += op_value;
@@ -90,31 +112,12 @@ void OpenGLWidget::onRotateAngelY(float y)
 
 void OpenGLWidget::onRowSelectedChanged(int op_value)
 {
-    int id_row = m_rowSelected;
-    id_row += op_value;
-
-    if(id_row >= 2)
-        id_row = 2;
-    else if (id_row <= 0)
-        id_row = 0;
-
-    m_rowSelected = id_row;
-    qDebug() << id_row;
-
+    onChangeSelection(m_rowSelected, op_value);
 }
 
 void OpenGLWidget::onColumnSelectedChanged(int op_value)
 {
-    int id_column = m_columnSelected;
-    id_column += op_value;
-
-    if(id_column >= 2)
-        id_column = 2;
-    else if (id_column <= 0)
-        id_column = 0;
-
-    m_columnSelected = id_column;
-    qDebug() << id_column;
+    onChangeSelection(m_columnSelected, op_value);
 }
 
 std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)

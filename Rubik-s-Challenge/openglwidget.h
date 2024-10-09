@@ -40,9 +40,10 @@ signals:
     void axisYCorrdinatesChanged(float y);
 
 private:
-    int m_samples { 6 };
+    const int m_samples { 6 };
     int m_rowSelected { 1 };
     int m_columnSelected { 1 };
+    int m_zAxisSelected { 1 }; //New I FORGOT to rotate by Z
     QSurfaceFormat m_formatAliasing;
 
     QMatrix4x4 m_projectionMatrix;
@@ -54,6 +55,7 @@ private:
     bool m_isIncreaseX { false };
     bool m_isIncreaseY { false };
 
+    void onChangeSelection(int& id, int op_value);
     void rotate(float& value, float op_value);
     std::vector<Cube*> getCubeInCollection(int id, ROTATION_BY type);
 
