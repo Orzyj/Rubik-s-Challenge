@@ -18,8 +18,13 @@ class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 public:
 
     enum ROTATION_BY {
+        ROWS = 0,
         COLUMNS = 1,
-        ROWS = 0
+        DEEP = 2,
+        LEFT = 3,
+        RIGHT = 4,
+        TOP = 5,
+        BOTTOM = 6
     };
 
     OpenGLWidget(QWidget* parent  = nullptr);
@@ -29,6 +34,7 @@ public:
     void onRotateAngelY(float y);
     void onRowSelectedChanged(int op_value);
     void onColumnSelectedChanged(int op_value);
+    void onDeepLevelSelectedChanged(int op_value);
 
 protected:
     void initializeGL() override;
@@ -43,23 +49,22 @@ private:
     const int m_samples { 6 };
     int m_rowSelected { 1 };
     int m_columnSelected { 1 };
-    int m_zAxisSelected { 1 }; //New I FORGOT to rotate by Z
+    int m_deep { 1 };
     QSurfaceFormat m_formatAliasing;
 
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_modelViewMatrix;
     QVector<Cube*> m_cubes;
+    std::vector<Cube*> actualSelectedCubes;
 
     float m_rotateAngelCubeX { 45.f };
     float m_rotateAngelCubeY { 45.f };
     bool m_isIncreaseX { false };
     bool m_isIncreaseY { false };
 
-    void onChangeSelection(int& id, int op_value);
+    void onChangeSelection(int& id, int op_value, ROTATION_BY type);
     void rotate(float& value, float op_value);
     std::vector<Cube*> getCubeInCollection(int id, ROTATION_BY type);
-
-
 };
 
 #endif // OPENGLWIDGET_H

@@ -8,14 +8,14 @@
 class Cube : protected QOpenGLFunctions
 {
 public:
-    Cube(QVector3D position, int x, int y, int z);
+    Cube(int id, QVector3D position, int x, int y, int z);
     ~Cube();
     void draw();
     QVector3D position;
     QMatrix4x4 modelMatrix;
     bool isSelected {false};
 
-    int id_x, id_y, id_z;
+    int m_id, id_x, id_y, id_z;
 };
 
 #endif // CUBE_H

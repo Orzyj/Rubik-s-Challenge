@@ -5,20 +5,19 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
 
     m_formatAliasing.setSamples(m_samples);
     QSurfaceFormat::setDefaultFormat(m_formatAliasing);
+    unsigned int id = 0;
 
     for (int x = -1; x <= 1; ++x) {
         for (int y = -1; y <= 1; ++y) {
-            for (int z = -1; z <= 1; ++z) {
+            for (int z = -1; z <= 1; ++z, id++) {
                 QVector3D position(x * 2.1f, y * 2.1f, z * 2.1f);
-                m_cubes.append(new Cube(position, x + 1, y + 1, z + 1));
+                m_cubes.append(new Cube(id, position, x + 1, y + 1, z + 1));
             }
         }
     }
 
     for(int i = 0; i < m_cubes.count(); i++) {
-        if(m_cubes[i]->id_y == 1)
-            m_cubes[i]->isSelected = true;
-        if(m_cubes[i]->id_x == 1)
+        if(m_cubes[i]->id_y == m_rowSelected)
             m_cubes[i]->isSelected = true;
     }
 }
@@ -70,7 +69,7 @@ void OpenGLWidget::paintGL()
     }
 }
 
-void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value)
+void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value, ROTATION_BY type)
 {
     int id = idColOrRow;
     id += op_value;
@@ -85,8 +84,12 @@ void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value)
     }
 
     for(Cube* cube : m_cubes) {
-        if(cube->id_x == m_columnSelected)  cube->isSelected = true;
-        if(cube->id_y == m_rowSelected)     cube->isSelected = true;
+        if(cube->id_x == m_columnSelected && type == ROTATION_BY::COLUMNS)
+            cube->isSelected = true;
+        else if(cube->id_y == m_rowSelected&& type == ROTATION_BY::ROWS)
+            cube->isSelected = true;
+        else if(cube->id_z == m_deep&& type == ROTATION_BY::DEEP)
+            cube->isSelected = true;
     }
 
     update();
@@ -112,12 +115,23 @@ void OpenGLWidget::onRotateAngelY(float y)
 
 void OpenGLWidget::onRowSelectedChanged(int op_value)
 {
-    onChangeSelection(m_rowSelected, op_value);
+    onChangeSelection(m_rowSelected, op_value, ROTATION_BY::ROWS);
+    actualSelectedCubes.clear();
+    actualSelectedCubes = getCubeInCollection(m_rowSelected, ROTATION_BY::ROWS);
 }
 
 void OpenGLWidget::onColumnSelectedChanged(int op_value)
 {
-    onChangeSelection(m_columnSelected, op_value);
+    onChangeSelection(m_columnSelected, op_value, ROTATION_BY::COLUMNS);
+    actualSelectedCubes.clear();
+    actualSelectedCubes = getCubeInCollection(m_columnSelected, ROTATION_BY::COLUMNS);
+}
+
+void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
+{
+    onChangeSelection(m_deep, op_value, ROTATION_BY::DEEP);
+    actualSelectedCubes.clear();
+    actualSelectedCubes = getCubeInCollection(m_deep, ROTATION_BY::DEEP);
 }
 
 std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
@@ -126,7 +140,9 @@ std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
 
     for(Cube* cube : m_cubes) {
         if((type == ROTATION_BY::ROWS && cube->id_y == id) ||
-            (type == ROTATION_BY::COLUMNS && cube->id_x == id)) {
+            (type == ROTATION_BY::COLUMNS && cube->id_x == id) ||
+            (type == ROTATION_BY::DEEP && cube->id_z == id))
+            {
             cubes.push_back(cube);
         }
     }

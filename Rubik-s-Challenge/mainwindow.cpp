@@ -43,6 +43,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         const int key = event->key();
         const Qt::KeyboardModifiers modifier = event->modifiers();
         const float rotate = 6.f;
+        const int STEP = 1;
 
 
         if(modifier & Qt::ControlModifier) {
@@ -50,11 +51,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);
             if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateAngelX(-rotate);
             if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateAngelX(rotate);
+        } else if (modifier & Qt::ShiftModifier) {
+            if(key == Qt::Key_Left)     m_OpenGLWidget->onDeepLevelSelectedChanged(-STEP);
+            if(key == Qt::Key_Right)    m_OpenGLWidget->onDeepLevelSelectedChanged(STEP);
         } else {
-            if(key == Qt::Key_Left)     m_OpenGLWidget->onColumnSelectedChanged(-1);
-            if(key == Qt::Key_Right)    m_OpenGLWidget->onColumnSelectedChanged(1);
-            if(key == Qt::Key_Up)       m_OpenGLWidget->onRowSelectedChanged(1);
-            if(key == Qt::Key_Down)     m_OpenGLWidget->onRowSelectedChanged(-1);
+            if(key == Qt::Key_Left)     m_OpenGLWidget->onColumnSelectedChanged(-STEP);
+            if(key == Qt::Key_Right)    m_OpenGLWidget->onColumnSelectedChanged(STEP);
+            if(key == Qt::Key_Up)       m_OpenGLWidget->onRowSelectedChanged(STEP);
+            if(key == Qt::Key_Down)     m_OpenGLWidget->onRowSelectedChanged(-STEP);
         }
     }
 }
