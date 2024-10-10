@@ -134,6 +134,11 @@ void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
     actualSelectedCubes = getCubeInCollection(m_deep, ROTATION_BY::DEEP);
 }
 
+void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
+{
+    qDebug() << type;
+}
+
 std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
 {
     std::vector<Cube*> cubes;

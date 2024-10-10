@@ -45,8 +45,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         const float rotate = 6.f;
         const int STEP = 1;
 
+        if(key == Qt::Key_Space) {
+            spacePressed = true;
+        }
 
-        if(modifier & Qt::ControlModifier) {
+        if(spacePressed) {
+            if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::LEFT);
+            if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::RIGHT);
+            if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::UP);
+            if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::DOWN);
+
+
+        } else if(modifier & Qt::ControlModifier) {
             if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateAngelY(rotate);
             if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);
             if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateAngelX(-rotate);
@@ -60,6 +70,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             if(key == Qt::Key_Up)       m_OpenGLWidget->onRowSelectedChanged(STEP);
             if(key == Qt::Key_Down)     m_OpenGLWidget->onRowSelectedChanged(-STEP);
         }
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Space) {
+        spacePressed = false;
     }
 }
 

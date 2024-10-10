@@ -9,23 +9,13 @@
 #include <QSurfaceFormat>
 
 #include "cube.h"
-
+#include "rotationTypes.h"
 
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-
-    enum ROTATION_BY {
-        ROWS = 0,
-        COLUMNS = 1,
-        DEEP = 2,
-        LEFT = 3,
-        RIGHT = 4,
-        TOP = 5,
-        BOTTOM = 6
-    };
 
     OpenGLWidget(QWidget* parent  = nullptr);
     ~OpenGLWidget();
@@ -35,6 +25,7 @@ public:
     void onRowSelectedChanged(int op_value);
     void onColumnSelectedChanged(int op_value);
     void onDeepLevelSelectedChanged(int op_value);
+    void onRotateSelectedCubes(ROTATION_BY type);
 
 protected:
     void initializeGL() override;

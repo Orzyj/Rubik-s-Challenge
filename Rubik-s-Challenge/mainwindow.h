@@ -30,6 +30,7 @@ private:
     const int m_sensitivityThreshold {3};
     bool m_reversalAxisX;
     bool m_reversalAxisY;
+    bool spacePressed {false};
 
     void baseConfiguration();
 
@@ -39,6 +40,7 @@ private slots:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
