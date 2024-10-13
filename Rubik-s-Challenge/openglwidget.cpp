@@ -115,6 +115,7 @@ void OpenGLWidget::onRotateAngelY(float y)
 
 void OpenGLWidget::onRowSelectedChanged(int op_value)
 {
+    m_level = ROTATION_BY::ROWS;
     onChangeSelection(m_rowSelected, op_value, ROTATION_BY::ROWS);
     actualSelectedCubes.clear();
     actualSelectedCubes = getCubeInCollection(m_rowSelected, ROTATION_BY::ROWS);
@@ -122,6 +123,7 @@ void OpenGLWidget::onRowSelectedChanged(int op_value)
 
 void OpenGLWidget::onColumnSelectedChanged(int op_value)
 {
+    m_level = ROTATION_BY::COLUMNS;
     onChangeSelection(m_columnSelected, op_value, ROTATION_BY::COLUMNS);
     actualSelectedCubes.clear();
     actualSelectedCubes = getCubeInCollection(m_columnSelected, ROTATION_BY::COLUMNS);
@@ -129,6 +131,7 @@ void OpenGLWidget::onColumnSelectedChanged(int op_value)
 
 void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
 {
+    m_level = ROTATION_BY::DEEP;
     onChangeSelection(m_deep, op_value, ROTATION_BY::DEEP);
     actualSelectedCubes.clear();
     actualSelectedCubes = getCubeInCollection(m_deep, ROTATION_BY::DEEP);
@@ -136,7 +139,26 @@ void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
 
 void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
 {
-    qDebug() << type;
+    QMatrix4x4 groupModelMatrix = m_modelViewMatrix;
+    const int ANGEL_ROTATE = 45;
+
+    qDebug() << type << "   " << m_level;
+
+    if(m_level == ROTATION_BY::ROWS && (type == ROTATION_BY::LEFT || type == ROTATION_BY::RIGHT))
+        groupModelMatrix.rotate(ANGEL_ROTATE, 1.f, 0.f, 0.f);
+
+    else if(m_level == ROTATION_BY::COLUMNS && (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN))
+        groupModelMatrix.rotate(ANGEL_ROTATE, 0.f, 1.f, 0.f);
+
+    else if(m_level == ROTATION_BY::DEEP && (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN))
+        groupModelMatrix.rotate(ANGEL_ROTATE, 0.f, 0.f, 1.f);
+
+    for(Cube* cube : actualSelectedCubes) {
+        QMatrix4x4 modelRotate = groupModelMatrix;
+        modelRotate.translate(cube->position);
+        glLoadMatrixf(modelRotate.constData());
+    }
+    update();
 }
 
 std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)

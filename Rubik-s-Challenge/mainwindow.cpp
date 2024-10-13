@@ -55,7 +55,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::UP);
             if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::DOWN);
 
-
         } else if(modifier & Qt::ControlModifier) {
             if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateAngelY(rotate);
             if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);

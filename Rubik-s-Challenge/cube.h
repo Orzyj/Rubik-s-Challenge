@@ -13,6 +13,7 @@ public:
     void draw();
     QVector3D position;
     QMatrix4x4 modelMatrix;
+
     bool isSelected {false};
 
     int m_id, id_x, id_y, id_z;

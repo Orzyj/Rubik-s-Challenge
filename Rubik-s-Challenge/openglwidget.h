@@ -46,7 +46,9 @@ private:
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_modelViewMatrix;
     QVector<Cube*> m_cubes;
+
     std::vector<Cube*> actualSelectedCubes;
+    ROTATION_BY m_level;
 
     float m_rotateAngelCubeX { 45.f };
     float m_rotateAngelCubeY { 45.f };
