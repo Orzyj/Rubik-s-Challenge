@@ -11,6 +11,8 @@
 #include "cube.h"
 #include "rotationTypes.h"
 
+#define DEBUG 0
+
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -48,7 +50,7 @@ private:
     QVector<Cube*> m_cubes;
 
     std::vector<Cube*> actualSelectedCubes;
-    ROTATION_BY m_level;
+    ROTATION_BY m_level {ROTATION_BY::ROWS};
 
     float m_rotateAngelCubeX { 45.f };
     float m_rotateAngelCubeY { 45.f };

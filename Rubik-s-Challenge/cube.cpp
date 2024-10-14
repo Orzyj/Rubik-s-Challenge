@@ -2,7 +2,7 @@
 
 Cube::Cube(int id, QVector3D position, int x, int y, int z)
     : m_id(id), position(position), id_x(x), id_y(y), id_z(z){
-
+    transformMatrix.setToIdentity();
 }
 
 Cube::~Cube()

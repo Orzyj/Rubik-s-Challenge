@@ -12,7 +12,7 @@ public:
     ~Cube();
     void draw();
     QVector3D position;
-    QMatrix4x4 modelMatrix;
+    QMatrix4x4 transformMatrix;
 
     bool isSelected {false};
 

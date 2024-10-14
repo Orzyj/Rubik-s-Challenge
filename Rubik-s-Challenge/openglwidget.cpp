@@ -139,23 +139,60 @@ void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
 
 void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
 {
-    QMatrix4x4 groupModelMatrix = m_modelViewMatrix;
     const int ANGEL_ROTATE = 45;
+    QVector3D rotationAxis;
 
-    qDebug() << type << "   " << m_level;
+#ifdef DEBUG
+    qDebug() << "onRotateSelectedCubes called with type:" << type;
+    qDebug() << "Current level:" << m_level;
+#endif
 
-    if(m_level == ROTATION_BY::ROWS && (type == ROTATION_BY::LEFT || type == ROTATION_BY::RIGHT))
-        groupModelMatrix.rotate(ANGEL_ROTATE, 1.f, 0.f, 0.f);
 
-    else if(m_level == ROTATION_BY::COLUMNS && (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN))
-        groupModelMatrix.rotate(ANGEL_ROTATE, 0.f, 1.f, 0.f);
+    switch (m_level) {
+    case ROTATION_BY::ROWS:
+        if (type == ROTATION_BY::LEFT || type == ROTATION_BY::RIGHT)
+            rotationAxis = QVector3D(1.f, 0.f, 0.f);
+        break;
 
-    else if(m_level == ROTATION_BY::DEEP && (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN))
-        groupModelMatrix.rotate(ANGEL_ROTATE, 0.f, 0.f, 1.f);
+    case ROTATION_BY::COLUMNS:
+        if (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN)
+            rotationAxis = QVector3D(0.f, 1.f, 0.f);
+        break;
 
-    for(Cube* cube : actualSelectedCubes) {
-        QMatrix4x4 modelRotate = groupModelMatrix;
+    case ROTATION_BY::DEEP:
+        if (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN)
+            rotationAxis = QVector3D(0.f, 0.f, 1.f);
+        break;
+
+    default:
+        #ifdef DEBUG
+            qDebug() << "Invalid rotation level.";
+        #endif
+        return;
+    }
+
+    if (rotationAxis.isNull()) {
+        #ifdef DEBUG
+            qDebug() << "No valid rotation axis found for the current combination.";
+        #endif
+        return;
+    }
+
+    //JUST FOR check what the hell is wrong
+    int i = 0;
+
+    #ifdef DEBUG
+        qDebug() << "Selected cubes count:" << actualSelectedCubes.size();
+    #endif
+    for (Cube* cube : actualSelectedCubes) {
+        #ifdef DEBUG
+            qDebug() << (QString::number(i++)) << "Cube ID:" << cube->m_id;
+        #endif
+        cube->transformMatrix.rotate(ANGEL_ROTATE, rotationAxis);
+
+        QMatrix4x4 modelRotate = m_modelViewMatrix * cube->transformMatrix;
         modelRotate.translate(cube->position);
+
         glLoadMatrixf(modelRotate.constData());
     }
     update();
@@ -165,14 +202,24 @@ std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
 {
     std::vector<Cube*> cubes;
 
+    #ifdef DEBUG
+        qDebug() << "getCubeInCollection called for id:" << id << "and type:" << type;
+    #endif
     for(Cube* cube : m_cubes) {
         if((type == ROTATION_BY::ROWS && cube->id_y == id) ||
             (type == ROTATION_BY::COLUMNS && cube->id_x == id) ||
             (type == ROTATION_BY::DEEP && cube->id_z == id))
-            {
+        {
+            #ifdef DEBUG
+                qDebug() << "Cube selected with ID:" << cube->m_id;  // Log selected cubes
+            #endif
             cubes.push_back(cube);
         }
     }
+
+    #ifdef DEBUG
+        qDebug() << "Selected cubes in collection:" << cubes.size();
+    #endif
     return cubes;
 }
 
