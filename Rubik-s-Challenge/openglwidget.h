@@ -11,7 +11,7 @@
 #include "cube.h"
 #include "rotationTypes.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions

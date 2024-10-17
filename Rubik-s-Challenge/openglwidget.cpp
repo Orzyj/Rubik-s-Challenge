@@ -20,6 +20,8 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
         if(m_cubes[i]->id_y == m_rowSelected)
             m_cubes[i]->isSelected = true;
     }
+
+    actualSelectedCubes = this->getCubeInCollection(1, m_level);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -59,8 +61,8 @@ void OpenGLWidget::paintGL()
     groupModelMatrix.rotate(m_rotateAngelCubeY, 0.f, 1.f, 0.f);
 
     for (Cube* cube : m_cubes) {
-        QMatrix4x4 cubeModelMatrix = groupModelMatrix;
-
+        // Combine global and cube's local transformation
+        QMatrix4x4 cubeModelMatrix = groupModelMatrix * cube->transformMatrix;
         cubeModelMatrix.translate(cube->position);
 
         glLoadMatrixf(cubeModelMatrix.constData());
@@ -68,6 +70,7 @@ void OpenGLWidget::paintGL()
         cube->draw();
     }
 }
+
 
 void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value, ROTATION_BY type)
 {
@@ -139,24 +142,24 @@ void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
 
 void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
 {
-    const int ANGEL_ROTATE = 45;
+    const int ANGEL_ROTATE = 90;
     QVector3D rotationAxis;
 
-#ifdef DEBUG
-    qDebug() << "onRotateSelectedCubes called with type:" << type;
-    qDebug() << "Current level:" << m_level;
-#endif
+    #ifdef DEBUG
+        qDebug() << "onRotateSelectedCubes called with type:" << type;
+        qDebug() << "Current level:" << m_level;
+    #endif
 
 
     switch (m_level) {
     case ROTATION_BY::ROWS:
         if (type == ROTATION_BY::LEFT || type == ROTATION_BY::RIGHT)
-            rotationAxis = QVector3D(1.f, 0.f, 0.f);
+            rotationAxis = QVector3D(0.f, 1.f, 0.f);
         break;
 
     case ROTATION_BY::COLUMNS:
         if (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN)
-            rotationAxis = QVector3D(0.f, 1.f, 0.f);
+            rotationAxis = QVector3D(1.f, 0.f, 0.f);
         break;
 
     case ROTATION_BY::DEEP:
@@ -178,12 +181,11 @@ void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
         return;
     }
 
-    //JUST FOR check what the hell is wrong
-    int i = 0;
-
     #ifdef DEBUG
+        int i = 0;
         qDebug() << "Selected cubes count:" << actualSelectedCubes.size();
     #endif
+
     for (Cube* cube : actualSelectedCubes) {
         #ifdef DEBUG
             qDebug() << (QString::number(i++)) << "Cube ID:" << cube->m_id;
@@ -211,7 +213,7 @@ std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
             (type == ROTATION_BY::DEEP && cube->id_z == id))
         {
             #ifdef DEBUG
-                qDebug() << "Cube selected with ID:" << cube->m_id;  // Log selected cubes
+                qDebug() << "Cube selected with ID:" << cube->m_id;
             #endif
             cubes.push_back(cube);
         }
