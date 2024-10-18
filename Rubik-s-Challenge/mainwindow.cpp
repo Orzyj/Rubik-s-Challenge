@@ -27,6 +27,7 @@ void MainWindow::baseConfiguration()
 
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisXCorrdinatesChanged, this, &MainWindow::onLabelXTextChanged);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisYCorrdinatesChanged, this, &MainWindow::onLabelYTextChanged);
+    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::on)
 
     QMainWindow::connect(ui->chkboxAxisX, &QCheckBox::stateChanged, this, [this](){
         m_reversalAxisX = ui->chkboxAxisX->isChecked();
@@ -123,6 +124,19 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             m_basePoint = newPosition;
         }
     }
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    int delta = event->angleDelta().y();
+
+    if (delta > 0) {
+        qDebug() << "Scroll w górę";
+    } else if (delta < 0) {
+        qDebug() << "Scroll w dół";
+    }
+
+    QWidget::wheelEvent(event);
 }
 
 void MainWindow::onLabelXTextChanged(const float value)

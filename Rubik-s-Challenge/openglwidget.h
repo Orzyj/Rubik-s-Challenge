@@ -29,6 +29,12 @@ public:
     void onDeepLevelSelectedChanged(int op_value);
     void onRotateSelectedCubes(ROTATION_BY type);
 
+    float zoomFactorial() const;
+    void setZoomFactorial(float newZoomFactorial);
+
+public slots:
+    void onZoomChanged(float val);
+
 protected:
     void initializeGL() override;
     void resizeGL(int width, int height) override;
@@ -43,6 +49,7 @@ private:
     int m_rowSelected { 1 };
     int m_columnSelected { 1 };
     int m_deep { 1 };
+    float m_zoomFactorial { -15.f };
     QSurfaceFormat m_formatAliasing;
 
     QMatrix4x4 m_projectionMatrix;

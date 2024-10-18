@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QWheelEvent>
 #include <QMouseEvent>
 #include <QLabel>
 #include "openglwidget.h"
@@ -44,6 +45,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 };
 #endif // MAINWINDOW_H

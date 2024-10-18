@@ -50,7 +50,7 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_modelViewMatrix.setToIdentity();
-    m_modelViewMatrix.translate(0.f, 0.f, -15.f);
+    m_modelViewMatrix.translate(0.f, 0.f, -50.f);
 
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(m_projectionMatrix.constData());
@@ -61,7 +61,6 @@ void OpenGLWidget::paintGL()
     groupModelMatrix.rotate(m_rotateAngelCubeY, 0.f, 1.f, 0.f);
 
     for (Cube* cube : m_cubes) {
-        // Combine global and cube's local transformation
         QMatrix4x4 cubeModelMatrix = groupModelMatrix * cube->transformMatrix;
         cubeModelMatrix.translate(cube->position);
 
@@ -71,6 +70,20 @@ void OpenGLWidget::paintGL()
     }
 }
 
+float OpenGLWidget::zoomFactorial() const
+{
+    return m_zoomFactorial;
+}
+
+void OpenGLWidget::setZoomFactorial(float newZoomFactorial)
+{
+    m_zoomFactorial = newZoomFactorial;
+}
+
+void OpenGLWidget::onZoomChanged(float val)
+{
+    qDebug() << val;
+}
 
 void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value, ROTATION_BY type)
 {
