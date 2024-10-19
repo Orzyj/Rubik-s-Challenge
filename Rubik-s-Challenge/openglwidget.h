@@ -33,7 +33,7 @@ public:
     void setZoomFactorial(float newZoomFactorial);
 
 public slots:
-    void onZoomChanged(float val);
+    void onZoomChanged();
 
 protected:
     void initializeGL() override;

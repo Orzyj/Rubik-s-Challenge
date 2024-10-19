@@ -50,7 +50,7 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_modelViewMatrix.setToIdentity();
-    m_modelViewMatrix.translate(0.f, 0.f, -50.f);
+    m_modelViewMatrix.translate(0.f, 0.f, m_zoomFactorial);
 
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(m_projectionMatrix.constData());
@@ -80,9 +80,9 @@ void OpenGLWidget::setZoomFactorial(float newZoomFactorial)
     m_zoomFactorial = newZoomFactorial;
 }
 
-void OpenGLWidget::onZoomChanged(float val)
+void OpenGLWidget::onZoomChanged()
 {
-    qDebug() << val;
+    update();
 }
 
 void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value, ROTATION_BY type)
@@ -210,6 +210,7 @@ void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
 
         glLoadMatrixf(modelRotate.constData());
     }
+    s
     update();
 }
 

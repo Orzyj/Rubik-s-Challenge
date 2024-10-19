@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QLabel>
 #include "openglwidget.h"
+#include "scrollhandle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,9 +23,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void scrolledUp(OpenGLWidget&  widget);
+    void scrolledDown(OpenGLWidget&  widget);
+
 private:
     Ui::MainWindow *ui;
     OpenGLWidget *m_OpenGLWidget {nullptr};
+    ScrollHandle* m_scrollHandle {nullptr};
 
     bool m_isInWindowFocus {false};
     QPoint m_basePoint;

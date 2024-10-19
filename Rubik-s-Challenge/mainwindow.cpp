@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->m_OpenGLWidget = new OpenGLWidget(this);
+    this->m_scrollHandle = new ScrollHandle(this);
 
     baseConfiguration();
 }
@@ -25,9 +26,11 @@ void MainWindow::baseConfiguration()
     m_reversalAxisX = ui->chkboxAxisX->isChecked();
     m_reversalAxisY = ui->chkboxAxisY->isChecked();
 
+    QMainWindow::connect(this, &MainWindow::scrolledUp, m_scrollHandle, &ScrollHandle::scrollUp);
+    QMainWindow::connect(this, &MainWindow::scrolledDown, m_scrollHandle, &ScrollHandle::scrollDown);
+    QMainWindow::connect(m_scrollHandle, &ScrollHandle::refresh, m_OpenGLWidget, &OpenGLWidget::onZoomChanged);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisXCorrdinatesChanged, this, &MainWindow::onLabelXTextChanged);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisYCorrdinatesChanged, this, &MainWindow::onLabelYTextChanged);
-    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::on)
 
     QMainWindow::connect(ui->chkboxAxisX, &QCheckBox::stateChanged, this, [this](){
         m_reversalAxisX = ui->chkboxAxisX->isChecked();
@@ -130,11 +133,8 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 {
     int delta = event->angleDelta().y();
 
-    if (delta > 0) {
-        qDebug() << "Scroll w górę";
-    } else if (delta < 0) {
-        qDebug() << "Scroll w dół";
-    }
+    if (delta > 0)          emit scrolledUp(*m_OpenGLWidget);
+    else if (delta < 0)     emit scrolledDown(*m_OpenGLWidget);
 
     QWidget::wheelEvent(event);
 }
