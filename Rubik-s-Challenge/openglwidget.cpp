@@ -210,7 +210,7 @@ void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
 
         glLoadMatrixf(modelRotate.constData());
     }
-    s
+
     update();
 }
 
@@ -227,7 +227,7 @@ std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
             (type == ROTATION_BY::DEEP && cube->id_z == id))
         {
             #ifdef DEBUG
-                qDebug() << "Cube selected with ID:" << cube->m_id;
+                qDebug() << "Cube select ed with ID:" << cube->m_id;
             #endif
             cubes.push_back(cube);
         }

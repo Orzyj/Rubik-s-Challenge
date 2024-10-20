@@ -6,8 +6,11 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QLabel>
+
 #include "openglwidget.h"
 #include "scrollhandle.h"
+#include "keyboardhandle.h"
+#include "mousehandle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,24 +29,25 @@ public:
 signals:
     void scrolledUp(OpenGLWidget&  widget);
     void scrolledDown(OpenGLWidget&  widget);
+    void keyPressed(const int &key, const Qt::KeyboardModifiers &modifier, OpenGLWidget &widget);
+    void keyRelesed(const int &key);
+    void mousePressed(const QRect& geometry, const QPoint& mousePosition, OpenGLWidget& widget);
+    void mouseRelesed();
+    void mouseMoved(const QPoint& newPosition, OpenGLWidget& widget);
 
 private:
     Ui::MainWindow *ui;
     OpenGLWidget *m_OpenGLWidget {nullptr};
     ScrollHandle* m_scrollHandle {nullptr};
-
-    bool m_isInWindowFocus {false};
-    QPoint m_basePoint;
-    const int m_sensitivityThreshold {3};
-    bool m_reversalAxisX;
-    bool m_reversalAxisY;
-    bool spacePressed {false};
+    KeyboardHandle* m_keyboardHandle {nullptr};
+    MouseHandle* m_mouseHandle {nullptr};
 
     void baseConfiguration();
 
 private slots:
-    void onLabelXTextChanged(const float value);
-    void onLabelYTextChanged(const float value);
+    void onLabelXTextChanged(const float& value);
+    void onLabelYTextChanged(const float& value);
+    void onCheckBoxAxisStateChanged(const bool& state);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->m_OpenGLWidget = new OpenGLWidget(this);
     this->m_scrollHandle = new ScrollHandle(this);
+    this->m_keyboardHandle = new KeyboardHandle(this);
+    this->m_mouseHandle = new MouseHandle(this);
 
     baseConfiguration();
 }
@@ -17,28 +19,39 @@ MainWindow::~MainWindow()
     if(m_OpenGLWidget != nullptr)
         delete m_OpenGLWidget;
 
+    if(m_scrollHandle != nullptr)
+        delete m_scrollHandle;
+
+    if(m_keyboardHandle != nullptr)
+        delete m_keyboardHandle;
+
+    if(m_mouseHandle != nullptr)
+        delete m_mouseHandle;
+
     delete ui;
 }
 
 void MainWindow::baseConfiguration()
 {
     ui->frameOpenGL->layout()->addWidget(m_OpenGLWidget);
-    m_reversalAxisX = ui->chkboxAxisX->isChecked();
-    m_reversalAxisY = ui->chkboxAxisY->isChecked();
+    bool reversalAxisX = ui->chkboxAxisX->isChecked();
+    bool reversalAxisY = ui->chkboxAxisY->isChecked();
+
+    m_mouseHandle->setReversalAxisX(reversalAxisX);
+    m_mouseHandle->setReversalAxisY(reversalAxisY);
 
     QMainWindow::connect(this, &MainWindow::scrolledUp, m_scrollHandle, &ScrollHandle::scrollUp);
     QMainWindow::connect(this, &MainWindow::scrolledDown, m_scrollHandle, &ScrollHandle::scrollDown);
+    QMainWindow::connect(this, &MainWindow::keyPressed, m_keyboardHandle, &KeyboardHandle::keyPressed);
+    QMainWindow::connect(this, &MainWindow::keyRelesed, m_keyboardHandle, &KeyboardHandle::keyRelesed);
+    QMainWindow::connect(this, &MainWindow::mousePressed, m_mouseHandle, &MouseHandle::onMousePressed);
+    QMainWindow::connect(this, &MainWindow::mouseRelesed, m_mouseHandle, &MouseHandle::onMouseRelesed);
+    QMainWindow::connect(this, &MainWindow::mouseMoved, m_mouseHandle, &MouseHandle::onMouseMoved);
     QMainWindow::connect(m_scrollHandle, &ScrollHandle::refresh, m_OpenGLWidget, &OpenGLWidget::onZoomChanged);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisXCorrdinatesChanged, this, &MainWindow::onLabelXTextChanged);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisYCorrdinatesChanged, this, &MainWindow::onLabelYTextChanged);
-
-    QMainWindow::connect(ui->chkboxAxisX, &QCheckBox::stateChanged, this, [this](){
-        m_reversalAxisX = ui->chkboxAxisX->isChecked();
-    });
-
-    QMainWindow::connect(ui->chkboxAxisY, &QCheckBox::stateChanged, this, [this](){
-        m_reversalAxisY = ui->chkboxAxisY->isChecked();
-    });
+    QMainWindow::connect(ui->chkboxAxisX,&QCheckBox::stateChanged, this, &MainWindow::onCheckBoxAxisStateChanged);
+    QMainWindow::connect(ui->chkboxAxisY,&QCheckBox::stateChanged, this, &MainWindow::onCheckBoxAxisStateChanged);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -46,40 +59,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(event->type() == QEvent::KeyPress) {
         const int key = event->key();
         const Qt::KeyboardModifiers modifier = event->modifiers();
-        const float rotate = 6.f;
-        const int STEP = 1;
 
-        if(key == Qt::Key_Space) {
-            spacePressed = true;
-        }
-
-        if(spacePressed) {
-            if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::LEFT);
-            if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::RIGHT);
-            if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::UP);
-            if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateSelectedCubes(ROTATION_BY::DOWN);
-
-        } else if(modifier & Qt::ControlModifier) {
-            if(key == Qt::Key_Left)     m_OpenGLWidget->onRotateAngelY(rotate);
-            if(key == Qt::Key_Right)    m_OpenGLWidget->onRotateAngelY(-rotate);
-            if(key == Qt::Key_Up)       m_OpenGLWidget->onRotateAngelX(-rotate);
-            if(key == Qt::Key_Down)     m_OpenGLWidget->onRotateAngelX(rotate);
-        } else if (modifier & Qt::ShiftModifier) {
-            if(key == Qt::Key_Left)     m_OpenGLWidget->onDeepLevelSelectedChanged(-STEP);
-            if(key == Qt::Key_Right)    m_OpenGLWidget->onDeepLevelSelectedChanged(STEP);
-        } else {
-            if(key == Qt::Key_Left)     m_OpenGLWidget->onColumnSelectedChanged(-STEP);
-            if(key == Qt::Key_Right)    m_OpenGLWidget->onColumnSelectedChanged(STEP);
-            if(key == Qt::Key_Up)       m_OpenGLWidget->onRowSelectedChanged(STEP);
-            if(key == Qt::Key_Down)     m_OpenGLWidget->onRowSelectedChanged(-STEP);
-        }
+        emit keyPressed(key, modifier, *m_OpenGLWidget);
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Space) {
-        spacePressed = false;
+        const int key = event->key();
+
+        emit keyRelesed(key);
     }
 }
 
@@ -87,46 +77,23 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QRect geometry = m_OpenGLWidget->geometry();
     QPoint mousePosition = event->pos();
-    int openGLHeight = m_OpenGLWidget->height();
-    int openGLWidth = m_OpenGLWidget->width();
 
-    if(event->button() == Qt::LeftButton &&
-    ((mousePosition.x() > geometry.x()) &&
-    (mousePosition.x() < geometry.x() + openGLWidth)) &&
-    ((mousePosition.y() > geometry.y()) &&
-    (mousePosition.y() < geometry.y() + openGLHeight))) {
-        m_isInWindowFocus = true;
-        m_basePoint = mousePosition;
-    }
+    if(event->button() == Qt::LeftButton)
+        emit mousePressed(geometry, mousePosition, *m_OpenGLWidget);
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        m_isInWindowFocus = false;
+        emit mouseRelesed();
     }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if (m_isInWindowFocus) {
-        QPoint newPosition = event->pos();
-        const float rotateSpeed = 0.3f;
+    QPoint newPosition = event->pos();
 
-        int dx = newPosition.x() - m_basePoint.x();
-        int dy = newPosition.y() - m_basePoint.y();
-
-        if (abs(dx) > m_sensitivityThreshold || abs(dy) > m_sensitivityThreshold) {
-
-            float angleX = rotateSpeed * dy * (m_reversalAxisX ? -1 : 1);
-            float angleY = rotateSpeed * dx * (m_reversalAxisY ? -1 : 1);
-
-            m_OpenGLWidget->onRotateAngelX(angleX);
-            m_OpenGLWidget->onRotateAngelY(angleY);
-
-            m_basePoint = newPosition;
-        }
-    }
+    emit mouseMoved(newPosition, *m_OpenGLWidget);
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event)
@@ -139,14 +106,24 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     QWidget::wheelEvent(event);
 }
 
-void MainWindow::onLabelXTextChanged(const float value)
+void MainWindow::onLabelXTextChanged(const float& value)
 {
     const QString valueTxt = tr("Wartość osi X: ") + QString::number(value);
     ui->lblXCor->setText(valueTxt);
 }
 
-void MainWindow::onLabelYTextChanged(const float value)
+void MainWindow::onLabelYTextChanged(const float& value)
 {
     const QString valueTxt = tr("Wartość osi Y: ") + QString::number(value);
     ui->lblYCor->setText(valueTxt);
+}
+
+void MainWindow::onCheckBoxAxisStateChanged(const bool &state)
+{
+    auto _sender = sender();
+
+    if(_sender->objectName() == "chkboxAxisX")
+        m_mouseHandle->setReversalAxisX(state);
+    else if (_sender->objectName() == "chkboxAxisY")
+        m_mouseHandle->setReversalAxisY(state);
 }
