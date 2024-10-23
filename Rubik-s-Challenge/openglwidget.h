@@ -24,10 +24,6 @@ public:
 
     void onRotateAngelX(float x);
     void onRotateAngelY(float y);
-    void onRowSelectedChanged(int op_value);
-    void onColumnSelectedChanged(int op_value);
-    void onDeepLevelSelectedChanged(int op_value);
-    void onRotateSelectedCubes(ROTATION_BY type);
 
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
@@ -46,9 +42,6 @@ signals:
 
 private:
     const int m_samples { 6 };
-    int m_rowSelected { 1 };
-    int m_columnSelected { 1 };
-    int m_deep { 1 };
     float m_zoomFactorial { -15.f };
     QSurfaceFormat m_formatAliasing;
 
@@ -57,16 +50,11 @@ private:
     QVector<Cube*> m_cubes;
 
     std::vector<Cube*> actualSelectedCubes;
-    ROTATION_BY m_level {ROTATION_BY::ROWS};
 
     float m_rotateAngelCubeX { 45.f };
     float m_rotateAngelCubeY { 45.f };
-    bool m_isIncreaseX { false };
-    bool m_isIncreaseY { false };
 
-    void onChangeSelection(int& id, int op_value, ROTATION_BY type);
     void rotate(float& value, float op_value);
-    std::vector<Cube*> getCubeInCollection(int id, ROTATION_BY type);
-};
+  };
 
 #endif // OPENGLWIDGET_H

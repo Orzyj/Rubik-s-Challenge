@@ -15,13 +15,6 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
             }
         }
     }
-
-    for(int i = 0; i < m_cubes.count(); i++) {
-        if(m_cubes[i]->id_y == m_rowSelected)
-            m_cubes[i]->isSelected = true;
-    }
-
-    actualSelectedCubes = this->getCubeInCollection(1, m_level);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -85,31 +78,6 @@ void OpenGLWidget::onZoomChanged()
     update();
 }
 
-void OpenGLWidget::onChangeSelection(int &idColOrRow, int op_value, ROTATION_BY type)
-{
-    int id = idColOrRow;
-    id += op_value;
-
-    if(id >= 2)         id = 2;
-    else if(id <= 0)    id = 0;
-
-    idColOrRow = id;
-
-    for(Cube* cube : m_cubes){
-        cube->isSelected = false;
-    }
-
-    for(Cube* cube : m_cubes) {
-        if(cube->id_x == m_columnSelected && type == ROTATION_BY::COLUMNS)
-            cube->isSelected = true;
-        else if(cube->id_y == m_rowSelected&& type == ROTATION_BY::ROWS)
-            cube->isSelected = true;
-        else if(cube->id_z == m_deep&& type == ROTATION_BY::DEEP)
-            cube->isSelected = true;
-    }
-
-    update();
-}
 
 void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
@@ -129,113 +97,4 @@ void OpenGLWidget::onRotateAngelY(float y)
     emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
 }
 
-void OpenGLWidget::onRowSelectedChanged(int op_value)
-{
-    m_level = ROTATION_BY::ROWS;
-    onChangeSelection(m_rowSelected, op_value, ROTATION_BY::ROWS);
-    actualSelectedCubes.clear();
-    actualSelectedCubes = getCubeInCollection(m_rowSelected, ROTATION_BY::ROWS);
-}
-
-void OpenGLWidget::onColumnSelectedChanged(int op_value)
-{
-    m_level = ROTATION_BY::COLUMNS;
-    onChangeSelection(m_columnSelected, op_value, ROTATION_BY::COLUMNS);
-    actualSelectedCubes.clear();
-    actualSelectedCubes = getCubeInCollection(m_columnSelected, ROTATION_BY::COLUMNS);
-}
-
-void OpenGLWidget::onDeepLevelSelectedChanged(int op_value)
-{
-    m_level = ROTATION_BY::DEEP;
-    onChangeSelection(m_deep, op_value, ROTATION_BY::DEEP);
-    actualSelectedCubes.clear();
-    actualSelectedCubes = getCubeInCollection(m_deep, ROTATION_BY::DEEP);
-}
-
-void OpenGLWidget::onRotateSelectedCubes(ROTATION_BY type)
-{
-    const int ANGEL_ROTATE = 90;
-    QVector3D rotationAxis;
-
-    #ifdef DEBUG
-        qDebug() << "onRotateSelectedCubes called with type:" << type;
-        qDebug() << "Current level:" << m_level;
-    #endif
-
-
-    switch (m_level) {
-    case ROTATION_BY::ROWS:
-        if (type == ROTATION_BY::LEFT || type == ROTATION_BY::RIGHT)
-            rotationAxis = QVector3D(0.f, 1.f, 0.f);
-        break;
-
-    case ROTATION_BY::COLUMNS:
-        if (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN)
-            rotationAxis = QVector3D(1.f, 0.f, 0.f);
-        break;
-
-    case ROTATION_BY::DEEP:
-        if (type == ROTATION_BY::UP || type == ROTATION_BY::DOWN)
-            rotationAxis = QVector3D(0.f, 0.f, 1.f);
-        break;
-
-    default:
-        #ifdef DEBUG
-            qDebug() << "Invalid rotation level.";
-        #endif
-        return;
-    }
-
-    if (rotationAxis.isNull()) {
-        #ifdef DEBUG
-            qDebug() << "No valid rotation axis found for the current combination.";
-        #endif
-        return;
-    }
-
-    #ifdef DEBUG
-        int i = 0;
-        qDebug() << "Selected cubes count:" << actualSelectedCubes.size();
-    #endif
-
-    for (Cube* cube : actualSelectedCubes) {
-        #ifdef DEBUG
-            qDebug() << (QString::number(i++)) << "Cube ID:" << cube->m_id;
-        #endif
-        cube->transformMatrix.rotate(ANGEL_ROTATE, rotationAxis);
-
-        QMatrix4x4 modelRotate = m_modelViewMatrix * cube->transformMatrix;
-        modelRotate.translate(cube->position);
-
-        glLoadMatrixf(modelRotate.constData());
-    }
-
-    update();
-}
-
-std::vector<Cube *> OpenGLWidget::getCubeInCollection(int id, ROTATION_BY type)
-{
-    std::vector<Cube*> cubes;
-
-    #ifdef DEBUG
-        qDebug() << "getCubeInCollection called for id:" << id << "and type:" << type;
-    #endif
-    for(Cube* cube : m_cubes) {
-        if((type == ROTATION_BY::ROWS && cube->id_y == id) ||
-            (type == ROTATION_BY::COLUMNS && cube->id_x == id) ||
-            (type == ROTATION_BY::DEEP && cube->id_z == id))
-        {
-            #ifdef DEBUG
-                qDebug() << "Cube select ed with ID:" << cube->m_id;
-            #endif
-            cubes.push_back(cube);
-        }
-    }
-
-    #ifdef DEBUG
-        qDebug() << "Selected cubes in collection:" << cubes.size();
-    #endif
-    return cubes;
-}
 
