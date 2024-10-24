@@ -96,6 +96,23 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Lista wykonanych kroków</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listSteps"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnBackSteps">
+            <property name="text">
+             <string>Cofnij</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

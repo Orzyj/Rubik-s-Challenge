@@ -39,6 +39,8 @@ void MainWindow::baseConfiguration()
 
     m_mouseHandle->setReversalAxisX(reversalAxisX);
     m_mouseHandle->setReversalAxisY(reversalAxisY);
+    ui->lblXCor->setText("Wartość osi X: "+ QString::number(45.0));
+    ui->lblYCor->setText("Wartość osi Y: "+ QString::number(45.0));
 
     QMainWindow::connect(this, &MainWindow::scrolledUp, m_scrollHandle, &ScrollHandle::scrollUp);
     QMainWindow::connect(this, &MainWindow::scrolledDown, m_scrollHandle, &ScrollHandle::scrollDown);
