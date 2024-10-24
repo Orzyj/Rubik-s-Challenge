@@ -11,7 +11,9 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
         for (int y = -1; y <= 1; ++y) {
             for (int z = -1; z <= 1; ++z, id++) {
                 QVector3D position(x * 2.1f, y * 2.1f, z * 2.1f);
-                m_cubes.append(new Cube(id, position, x + 1, y + 1, z + 1));
+                Cube* cube = new Cube(id, position, x + 1, y + 1, z + 1);
+
+                m_cubes.append(cube);
             }
         }
     }
@@ -82,6 +84,46 @@ void OpenGLWidget::onZoomChanged()
 void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
     valueAxis += op_value;
+    update();
+}
+
+QVector<Cube *> OpenGLWidget::selectRowOrColumn(float positionValue, char axis)
+{
+    QVector<Cube*> selectedCubes;
+
+    auto checkPosition = [](float pos1, float pos2) {
+        return qFuzzyCompare(pos1, pos2);
+    };
+
+    for(Cube* cube : m_cubes) {
+        if ((axis == 'x' && checkPosition(cube->position.x(), positionValue)) ||
+            (axis == 'y' && checkPosition(cube->position.y(), positionValue)) ||
+            (axis == 'z' && checkPosition(cube->position.z(), positionValue))) {
+            selectedCubes.push_back(cube);
+        }
+
+    }
+    return selectedCubes;
+}
+
+void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle)
+{
+    QVector<Cube*> selectedCubes = selectRowOrColumn(positionValue, axis);
+
+    for (Cube* cube : selectedCubes) {
+        QMatrix4x4 rotationMatrix;
+
+        if (axis == 'x') {
+            rotationMatrix.rotate(angle, 1.0f, 0.0f, 0.0f);
+        } else if (axis == 'y') {
+            rotationMatrix.rotate(angle, 0.0f, 1.0f, 0.0f);
+        } else if (axis == 'z') {
+            rotationMatrix.rotate(angle, 0.0f, 0.0f, 1.0f);
+        }
+
+        cube->transformMatrix = rotationMatrix * cube->transformMatrix;
+    }
+
     update();
 }
 

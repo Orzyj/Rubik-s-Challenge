@@ -27,6 +27,7 @@ public:
 
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
+    void rotateRowOrColumn(float positionValue, char axis, float angle);
 
 public slots:
     void onZoomChanged();
@@ -55,6 +56,8 @@ private:
     float m_rotateAngelCubeY { 45.f };
 
     void rotate(float& value, float op_value);
-  };
+    QVector<Cube*> selectRowOrColumn(float positionValue, char axi);
+
+};
 
 #endif // OPENGLWIDGET_H
