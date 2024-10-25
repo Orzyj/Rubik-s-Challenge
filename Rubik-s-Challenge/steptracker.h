@@ -2,14 +2,27 @@
 #define STEPTRACKER_H
 
 #include <QObject>
+#include <QTableView>
+#include <QList>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QHeaderView>
 
-class StepTracker : public QObject
+class StepTracker : public QTableView
 {
     Q_OBJECT
 public:
-    explicit StepTracker(QObject *parent = nullptr);
+    explicit StepTracker(QWidget *parent = nullptr);
+    ~StepTracker();
 
-signals:
+private:
+    QStandardItemModel* m_model;
+    const int COLUMNS = 3;
+
+    void initColumns();
+
+public slots:
+    void onAddItem(QString itemValue);
 };
 
 #endif // STEPTRACKER_H

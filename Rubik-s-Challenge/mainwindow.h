@@ -6,11 +6,13 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QLabel>
+#include <QHBoxLayout>
 
 #include "openglwidget.h"
 #include "scrollhandle.h"
 #include "keyboardhandle.h"
 #include "mousehandle.h"
+#include "steptracker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -41,6 +43,7 @@ private:
     ScrollHandle* m_scrollHandle {nullptr};
     KeyboardHandle* m_keyboardHandle {nullptr};
     MouseHandle* m_mouseHandle {nullptr};
+    StepTracker* m_stepTrackerListWidget {nullptr};
 
     void baseConfiguration();
 
@@ -48,6 +51,8 @@ private slots:
     void onLabelXTextChanged(const float& value);
     void onLabelYTextChanged(const float& value);
     void onCheckBoxAxisStateChanged(const bool& state);
+
+    void on_btnBackSteps_clicked();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

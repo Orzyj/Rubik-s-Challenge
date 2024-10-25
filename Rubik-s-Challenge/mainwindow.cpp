@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->m_scrollHandle = new ScrollHandle(this);
     this->m_keyboardHandle = new KeyboardHandle(this);
     this->m_mouseHandle = new MouseHandle(this);
+    this->m_stepTrackerListWidget = new StepTracker(this);
 
     baseConfiguration();
 }
@@ -28,6 +29,9 @@ MainWindow::~MainWindow()
     if(m_mouseHandle != nullptr)
         delete m_mouseHandle;
 
+    if(m_stepTrackerListWidget != nullptr)
+        delete m_stepTrackerListWidget;
+
     delete ui;
 }
 
@@ -41,6 +45,9 @@ void MainWindow::baseConfiguration()
     m_mouseHandle->setReversalAxisY(reversalAxisY);
     ui->lblXCor->setText("Wartość osi X: "+ QString::number(45.0));
     ui->lblYCor->setText("Wartość osi Y: "+ QString::number(45.0));
+
+    ui->frameListTracker->setLayout(new QHBoxLayout());
+    ui->frameListTracker->layout()->addWidget(m_stepTrackerListWidget);
 
     QMainWindow::connect(this, &MainWindow::scrolledUp, m_scrollHandle, &ScrollHandle::scrollUp);
     QMainWindow::connect(this, &MainWindow::scrolledDown, m_scrollHandle, &ScrollHandle::scrollDown);
@@ -129,3 +136,9 @@ void MainWindow::onCheckBoxAxisStateChanged(const bool &state)
     else if (_sender->objectName() == "chkboxAxisY")
         m_mouseHandle->setReversalAxisY(state);
 }
+
+void MainWindow::on_btnBackSteps_clicked()
+{
+
+}
+
