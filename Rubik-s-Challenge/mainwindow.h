@@ -13,6 +13,7 @@
 #include "keyboardhandle.h"
 #include "mousehandle.h"
 #include "steptracker.h"
+#include "contextmenuhandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -36,7 +37,6 @@ signals:
     void mousePressed(const QRect& geometry, const QPoint& mousePosition, OpenGLWidget& widget);
     void mouseRelesed();
     void mouseMoved(const QPoint& newPosition, OpenGLWidget& widget);
-
 private:
     Ui::MainWindow *ui;
     OpenGLWidget *m_OpenGLWidget {nullptr};
@@ -45,13 +45,14 @@ private:
     MouseHandle* m_mouseHandle {nullptr};
     StepTracker* m_stepTrackerListWidget {nullptr};
 
+
     void baseConfiguration();
+    void onRightButtonMouse(const QPoint& mousePosition);
 
 private slots:
     void onLabelXTextChanged(const float& value);
     void onLabelYTextChanged(const float& value);
     void onCheckBoxAxisStateChanged(const bool& state);
-
     void on_btnBackSteps_clicked();
 
 protected:

@@ -86,9 +86,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QRect geometry = m_OpenGLWidget->geometry();
     QPoint mousePosition = event->pos();
+    auto button = event->button();
 
-    if(event->button() == Qt::LeftButton)
+    if(button == Qt::LeftButton)
         emit mousePressed(geometry, mousePosition, *m_OpenGLWidget);
+    else if(button == Qt::RightButton)
+        onRightButtonMouse(mousePosition);
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
@@ -140,5 +143,16 @@ void MainWindow::onCheckBoxAxisStateChanged(const bool &state)
 void MainWindow::on_btnBackSteps_clicked()
 {
 
+}
+
+void MainWindow::onRightButtonMouse(const QPoint &mousePosition)
+{
+    ContextMenuHandler* contextMenuHandler {nullptr};
+    contextMenuHandler = new ContextMenuHandler(this);
+
+    contextMenuHandler->move(QCursor::pos());
+    contextMenuHandler->exec();
+
+    delete contextMenuHandler;
 }
 

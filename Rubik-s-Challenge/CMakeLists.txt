@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Gui)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Gui)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(OpenGL REQUIRED)
 
@@ -32,6 +32,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         keyboardhandle.h keyboardhandle.cpp
         mousehandle.h mousehandle.cpp
         steptracker.h steptracker.cpp
+        contextmenuhandler.h contextmenuhandler.cpp contextmenuhandler.ui
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Rubik-s-Challenge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -53,6 +56,7 @@ endif()
 
 target_link_libraries(Rubik-s-Challenge PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Gui
     Qt6::OpenGLWidgets
     OpenGL::GL
 )

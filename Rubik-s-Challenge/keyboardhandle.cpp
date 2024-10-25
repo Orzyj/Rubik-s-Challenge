@@ -28,6 +28,8 @@ void KeyboardHandle::keyPressed(const int &key, const Qt::KeyboardModifiers &mod
     } else if (modifier & Qt::ShiftModifier) {
         // in progress
     }
+
+    spacePressed = false;
 }
 
 void KeyboardHandle::keyRelesed(const int &key)
