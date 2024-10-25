@@ -6,6 +6,7 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QLabel>
+#include <QEvent>
 #include <QHBoxLayout>
 
 #include "openglwidget.h"

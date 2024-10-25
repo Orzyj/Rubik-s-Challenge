@@ -25,15 +25,28 @@ void KeyboardHandle::keyPressed(const int &key, const Qt::KeyboardModifiers &mod
         if(key == Qt::Key_Right)    widget.onRotateAngelY(-ROTATE);
         if(key == Qt::Key_Up)       widget.onRotateAngelX(-ROTATE);
         if(key == Qt::Key_Down)     widget.onRotateAngelX(ROTATE);
-    } else if (modifier & Qt::ShiftModifier) {
-        // in progress
     }
-
-    spacePressed = false;
 }
 
 void KeyboardHandle::keyRelesed(const int &key)
 {
-    spacePressed = false;
-
+    if (key == Qt::Key_Space) {
+        spacePressed = false;
+    }
 }
+
+bool KeyboardHandle::eventFilter(QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        keyPressed(keyEvent->key(), keyEvent->modifiers(), *dynamic_cast<OpenGLWidget*>(obj));
+        return true;
+    } else if (event->type() == QEvent::KeyRelease) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        keyRelesed(keyEvent->key());
+        return true;
+    }
+    return QObject::eventFilter(obj, event);
+}
+
+

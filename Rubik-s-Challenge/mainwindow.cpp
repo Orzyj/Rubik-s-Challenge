@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->m_mouseHandle = new MouseHandle(this);
     this->m_stepTrackerListWidget = new StepTracker(this);
 
+    m_OpenGLWidget->installEventFilter(m_keyboardHandle);
+
     baseConfiguration();
 }
 
