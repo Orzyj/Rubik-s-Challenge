@@ -20,7 +20,6 @@ private:
     const int STEP { 1 };
     const float ROTATE { 6.f };
 
-    bool spacePressed {false};
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
