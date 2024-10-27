@@ -53,8 +53,8 @@ void Cube::draw()
     glVertex3f(1.0f, -1.0f,  1.0f);
 
 
-    // Top face (y = 1) Cyan color
-    if (id_y == 2) glColor3f(0.0f, COLOR, COLOR);
+    // Top face (y = 1) white color
+    if (id_y == 2) glColor3f(COLOR, COLOR, COLOR);
     else           glColor3f(0.0f, 0.0f, 0.0f);
 
     glVertex3f(-1.0f,  1.0f, -1.0f);
@@ -63,8 +63,8 @@ void Cube::draw()
     glVertex3f( 1.0f,  1.0f, -1.0f);
 
 
-    // Bottom face (y = -1) Magenta color
-    if (id_y == 0)  glColor3f(COLOR, 0.0f, COLOR);
+    // Bottom face (y = -1) orange color
+    if (id_y == 0)  glColor3f(COLOR, COLOR / 2, 0.0f);
     else            glColor3f(0.0f, 0.0f, 0.0f);
 
     glVertex3f(-1.0f, -1.0f, -1.0f);

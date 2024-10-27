@@ -140,7 +140,7 @@ void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float ang
     m_rotatingCubes = selectRowOrColumn(positionValue, axis);
 
     connect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
-    m_rotationTimer->start(16);
+    m_rotationTimer->start(16); // 1000ms / 16 = ~62fps
     m_isAnimationRunning = true;
 }
 
