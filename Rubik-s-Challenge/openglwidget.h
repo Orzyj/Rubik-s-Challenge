@@ -7,9 +7,9 @@
 #include <QMatrix4x4>
 #include <QTimer>
 #include <QSurfaceFormat>
+#include <QTimer>
 
 #include "cube.h"
-#include "rotationTypes.h"
 
 #define DEBUG 1
 
@@ -31,6 +31,7 @@ public:
 
 public slots:
     void onZoomChanged();
+    void onNewGame();
 
 protected:
     void initializeGL() override;
@@ -45,19 +46,29 @@ private:
     const int m_samples { 6 };
     float m_zoomFactorial { -15.f };
     QSurfaceFormat m_formatAliasing;
+    QTimer* m_rotationTimer {nullptr};
+
+    //for animation rotating
+    float m_targetRotationAngle { 0.f };
+    float m_currentRotationAngle { 0.f };
+    float m_rotationIncrement { 2.0f };
+    QVector<Cube*> m_rotatingCubes;
+    char m_rotationAxis;
+    float m_rotationPositionValue;
+    bool m_isAnimationRunning {false};
 
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_modelViewMatrix;
     QVector<Cube*> m_cubes;
-
-    std::vector<Cube*> actualSelectedCubes;
 
     float m_rotateAngelCubeX { 45.f };
     float m_rotateAngelCubeY { 45.f };
 
     void rotate(float& value, float op_value);
     QVector<Cube*> selectRowOrColumn(float positionValue, char axi);
-
+    void generateCubes();
+    void startSmoothRotation(float positionValue, char axis, float angle);
+    void rotateCubesSmoothly();
 };
 
 #endif // OPENGLWIDGET_H

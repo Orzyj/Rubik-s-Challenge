@@ -5,24 +5,18 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
 
     m_formatAliasing.setSamples(m_samples);
     QSurfaceFormat::setDefaultFormat(m_formatAliasing);
-    unsigned int id = 0;
+    m_rotationTimer = new QTimer(this);
 
-    for (int x = -1; x <= 1; ++x) {
-        for (int y = -1; y <= 1; ++y) {
-            for (int z = -1; z <= 1; ++z, id++) {
-                QVector3D position(x * 2.1f, y * 2.1f, z * 2.1f);
-                Cube* cube = new Cube(id, position, x + 1, y + 1, z + 1);
-
-                m_cubes.append(cube);
-            }
-        }
-    }
+    generateCubes();
 }
 
 OpenGLWidget::~OpenGLWidget()
 {
     for(int i = 0; i < m_cubes.count(); i++)
         delete m_cubes[i];
+
+    if(m_rotationTimer != nullptr)
+        delete m_rotationTimer;
 }
 
 void OpenGLWidget::initializeGL()
@@ -80,6 +74,16 @@ void OpenGLWidget::onZoomChanged()
     update();
 }
 
+void OpenGLWidget::onNewGame()
+{
+    generateCubes();
+    m_rotateAngelCubeX = 45.f;
+    m_rotateAngelCubeY = 45.f;
+    emit axisXCorrdinatesChanged(m_rotateAngelCubeX);
+    emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
+    update();
+}
+
 
 void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
@@ -106,25 +110,71 @@ QVector<Cube *> OpenGLWidget::selectRowOrColumn(float positionValue, char axis)
     return selectedCubes;
 }
 
-void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle)
+void OpenGLWidget::generateCubes()
 {
-    QVector<Cube*> selectedCubes = selectRowOrColumn(positionValue, axis);
+    m_cubes.clear();
 
-    for (Cube* cube : selectedCubes) {
-        QMatrix4x4 rotationMatrix;
+    unsigned int id = 0;
 
-        if (axis == 'x') {
-            rotationMatrix.rotate(angle, 1.0f, 0.0f, 0.0f);
-        } else if (axis == 'y') {
-            rotationMatrix.rotate(angle, 0.0f, 1.0f, 0.0f);
-        } else if (axis == 'z') {
-            rotationMatrix.rotate(angle, 0.0f, 0.0f, 1.0f);
+    for (int x = -1; x <= 1; ++x) {
+        for (int y = -1; y <= 1; ++y) {
+            for (int z = -1; z <= 1; ++z, id++) {
+                QVector3D position(x * 2.1f, y * 2.1f, z * 2.1f);
+                Cube* cube = new Cube(id, position, x + 1, y + 1, z + 1);
+
+                m_cubes.append(cube);
+            }
         }
+    }
+}
 
+void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float angle)
+{
+    if(m_isAnimationRunning)
+        return;
+
+    m_targetRotationAngle = angle;
+    m_currentRotationAngle = 0.0f;
+    m_rotationAxis = axis;
+    m_rotationPositionValue = positionValue;
+    m_rotatingCubes = selectRowOrColumn(positionValue, axis);
+
+    connect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
+    m_rotationTimer->start(16);
+    m_isAnimationRunning = true;
+}
+
+void OpenGLWidget::rotateCubesSmoothly()
+{
+    if (std::abs(m_currentRotationAngle) >= std::abs(m_targetRotationAngle)) {
+        m_rotationTimer->stop();
+        disconnect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
+        m_isAnimationRunning = false;
+        return;
+    }
+
+    float angleStep = (m_targetRotationAngle > 0 ? m_rotationIncrement : -m_rotationIncrement);
+    m_currentRotationAngle += angleStep;
+
+    QMatrix4x4 rotationMatrix;
+    if (m_rotationAxis == 'x') {
+        rotationMatrix.rotate(angleStep, 1.0f, 0.0f, 0.0f);
+    } else if (m_rotationAxis == 'y') {
+        rotationMatrix.rotate(angleStep, 0.0f, 1.0f, 0.0f);
+    } else if (m_rotationAxis == 'z') {
+        rotationMatrix.rotate(angleStep, 0.0f, 0.0f, 1.0f);
+    }
+
+    for (Cube* cube : m_rotatingCubes) {
         cube->transformMatrix = rotationMatrix * cube->transformMatrix;
     }
 
     update();
+}
+
+void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle)
+{
+    startSmoothRotation(positionValue, axis, angle);
 }
 
 void OpenGLWidget::onRotateAngelX(float x)

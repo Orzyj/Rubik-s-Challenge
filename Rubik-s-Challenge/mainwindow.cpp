@@ -152,9 +152,11 @@ void MainWindow::onRightButtonMouse(const QPoint &mousePosition)
     ContextMenuHandler* contextMenuHandler {nullptr};
     contextMenuHandler = new ContextMenuHandler(this);
 
+    QMainWindow::connect(contextMenuHandler, &ContextMenuHandler::newGame, m_OpenGLWidget, &OpenGLWidget::onNewGame);
     contextMenuHandler->move(QCursor::pos());
     contextMenuHandler->exec();
 
+    QMainWindow::disconnect(contextMenuHandler, &ContextMenuHandler::newGame, m_OpenGLWidget, &OpenGLWidget::onNewGame);
     delete contextMenuHandler;
 }
 

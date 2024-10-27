@@ -15,6 +15,12 @@ public:
     explicit ContextMenuHandler(QWidget *parent = nullptr);
     ~ContextMenuHandler();
 
+public slots:
+    void onNewGameButtonClicked();
+
+signals:
+    void newGame();
+
 private:
     Ui::ContextMenuHandler *ui;
 };

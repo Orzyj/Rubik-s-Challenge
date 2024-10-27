@@ -6,9 +6,16 @@ ContextMenuHandler::ContextMenuHandler(QWidget *parent)
     , ui(new Ui::ContextMenuHandler)
 {
     ui->setupUi(this);
+
+    QWidget::connect(ui->btnStartAgain, &QPushButton::clicked, this, &ContextMenuHandler::onNewGameButtonClicked);
 }
 
 ContextMenuHandler::~ContextMenuHandler()
 {
     delete ui;
+}
+
+void ContextMenuHandler::onNewGameButtonClicked()
+{
+    emit newGame();
 }
