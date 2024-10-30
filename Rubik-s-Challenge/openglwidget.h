@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <QSurfaceFormat>
 #include <QTimer>
-
+#include <QPainter>
 #include "cube.h"
 
 #define DEBUG 1
@@ -47,6 +47,8 @@ private:
     float m_zoomFactorial { -15.f };
     QSurfaceFormat m_formatAliasing;
     QTimer* m_rotationTimer {nullptr};
+    QPainter* m_painter {nullptr};
+    unsigned int moves {0};
 
     //for animation rotating
     float m_targetRotationAngle { 0.f };

@@ -6,6 +6,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     m_formatAliasing.setSamples(m_samples);
     QSurfaceFormat::setDefaultFormat(m_formatAliasing);
     m_rotationTimer = new QTimer(this);
+    m_painter = new QPainter(this);
 
     generateCubes();
 }
@@ -17,6 +18,9 @@ OpenGLWidget::~OpenGLWidget()
 
     if(m_rotationTimer != nullptr)
         delete m_rotationTimer;
+
+    if(m_painter != nullptr)
+        delete m_painter;
 }
 
 void OpenGLWidget::initializeGL()
@@ -57,6 +61,19 @@ void OpenGLWidget::paintGL()
 
         cube->draw();
     }
+
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+
+    m_painter->begin(this);
+    m_painter->setPen(Qt::yellow);
+    m_painter->setFont(QFont("Helvetica", 12));
+    m_painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    m_painter->drawText(10, 20, "Liczba wykonanych ruchow: " + QString::number(moves));;
+    m_painter->end();
+
+    glPopAttrib();
 }
 
 float OpenGLWidget::zoomFactorial() const
@@ -96,17 +113,23 @@ QVector<Cube *> OpenGLWidget::selectRowOrColumn(float positionValue, char axis)
     QVector<Cube*> selectedCubes;
 
     auto checkPosition = [](float pos1, float pos2) {
+        qDebug() << pos1 << " " << pos2;
         return qFuzzyCompare(pos1, pos2);
     };
+
+    for(Cube* cube : m_cubes) {
+        cube->isSelected = false;
+    }
 
     for(Cube* cube : m_cubes) {
         if ((axis == 'x' && checkPosition(cube->position.x(), positionValue)) ||
             (axis == 'y' && checkPosition(cube->position.y(), positionValue)) ||
             (axis == 'z' && checkPosition(cube->position.z(), positionValue))) {
             selectedCubes.push_back(cube);
+            cube->isSelected = true;
         }
-
     }
+
     return selectedCubes;
 }
 
@@ -139,7 +162,7 @@ void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float ang
     m_rotationPositionValue = positionValue;
     m_rotatingCubes = selectRowOrColumn(positionValue, axis);
 
-    connect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
+    QOpenGLWidget::connect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
     m_rotationTimer->start(16); // 1000ms / 16 = ~62fps
     m_isAnimationRunning = true;
 }
@@ -148,7 +171,7 @@ void OpenGLWidget::rotateCubesSmoothly()
 {
     if (std::abs(m_currentRotationAngle) >= std::abs(m_targetRotationAngle)) {
         m_rotationTimer->stop();
-        disconnect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
+        QOpenGLWidget::disconnect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
         m_isAnimationRunning = false;
         return;
     }
@@ -175,6 +198,7 @@ void OpenGLWidget::rotateCubesSmoothly()
 void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle)
 {
     startSmoothRotation(positionValue, axis, angle);
+    moves++;
 }
 
 void OpenGLWidget::onRotateAngelX(float x)
@@ -188,5 +212,3 @@ void OpenGLWidget::onRotateAngelY(float y)
     rotate(m_rotateAngelCubeY, y);
     emit axisYCorrdinatesChanged(m_rotateAngelCubeY);
 }
-
-
