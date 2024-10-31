@@ -116,7 +116,7 @@ void OpenGLWidget::rotate(float& valueAxis, float op_value)
     update();
 }
 
-QVector<Cube *> OpenGLWidget::selectRowOrColumn(float positionValue, char axis)
+QVector<Cube *> OpenGLWidget::selectRowOrColumn()
 {
     QVector<Cube*> selectedCubes;
 
@@ -151,7 +151,7 @@ void OpenGLWidget::generateCubes()
     update();
 }
 
-void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float angle)
+void OpenGLWidget::startSmoothRotation(Direction direction, char axis, float angle)
 {
     if(m_isAnimationRunning)
         return;
@@ -159,8 +159,8 @@ void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float ang
     m_targetRotationAngle = angle;
     m_currentRotationAngle = 0.0f;
     m_rotationAxis = axis;
-    m_rotationPositionValue = positionValue;
-    m_rotatingCubes = selectRowOrColumn(positionValue, axis);
+    //m_rotationPositionValue = positionValue;
+    m_rotatingCubes = selectRowOrColumn();
 
     QOpenGLWidget::connect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
     m_rotationTimer->start(16); // 1000ms / 16 = ~62fps
@@ -195,21 +195,39 @@ void OpenGLWidget::rotateCubesSmoothly()
     update();
 }
 
-void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle)
+void OpenGLWidget::rotateRowOrColumn(Direction direction, char axis, float angle)
 {
-    startSmoothRotation(positionValue, axis, angle);
+    startSmoothRotation(direction, axis, angle);
     moves++;
 }
 
-void OpenGLWidget::changeSelectedOption()
+void OpenGLWidget::changeSelectedOption(Direction direction)
 {
-    m_selectedOption++;
+    if (direction == Direction::None) {
+        m_selectedOption++;
 
-    if(m_selectedOption >= 9)
-        m_selectedOption = 0;
+        if (m_selectedOption >= 9)
+            m_selectedOption = 0;
+
+        if(m_selectedOption == 0 || m_selectedOption == 1 || m_selectedOption == 2)
+            m_axis = 'x';
+        else if(m_selectedOption == 3 || m_selectedOption == 4 || m_selectedOption == 5)
+            m_axis = 'y';
+        else if(m_selectedOption == 6 || m_selectedOption == 7 || m_selectedOption == 8)
+            m_axis = 'z';
+
+        update();
+    } else {
+        float angle;
+
+        if(direction == Direction::Up || direction == Direction::Right) angle = 90.f;
+        else if(direction == Direction::Down || direction == Direction::Left) angle = -90.f;
 
 
-    update();
+        if((m_axis == 'x' && (direction == Direction::Left || direction == Direction::Right)) ||
+            (((m_axis == 'y') || (m_axis == 'z')) && (direction == Direction::Up || direction == Direction::Down)))
+        rotateRowOrColumn(direction, m_axis, angle);
+    }
 }
 
 void OpenGLWidget::onRotateAngelX(float x)

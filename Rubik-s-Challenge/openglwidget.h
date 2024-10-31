@@ -9,7 +9,9 @@
 #include <QSurfaceFormat>
 #include <QTimer>
 #include <QPainter>
+
 #include "cube.h"
+#include "directionsTypes.h"
 
 #define DEBUG 1
 
@@ -27,8 +29,8 @@ public:
 
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
-    void rotateRowOrColumn(float positionValue, char axis, float angle);
-    void changeSelectedOption();
+    void rotateRowOrColumn(Direction direction, char axis, float angle);
+    void changeSelectedOption(Direction direction);
 
 public slots:
     void onZoomChanged();
@@ -68,12 +70,13 @@ private:
     float m_rotateAngelCubeY { 45.f };
 
     void rotate(float& value, float op_value);
-    QVector<Cube*> selectRowOrColumn(float positionValue, char axi);
+    QVector<Cube*> selectRowOrColumn();
     void generateCubes();
-    void startSmoothRotation(float positionValue, char axis, float angle);
+    void startSmoothRotation(Direction direction, char axis, float angle);
     void rotateCubesSmoothly();
 
-    unsigned short m_selectedOption = 0;
+    unsigned short m_selectedOption { 0 };
+    char m_axis { 'x' };
     std::vector<std::vector<short>> m_possibleMoves {
         {0, 1, 2, 3, 4, 5, 6, 7, 8},
         {9, 10, 11, 12, 13, 14, 15, 16, 17},

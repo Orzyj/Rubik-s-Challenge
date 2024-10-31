@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QKeyEvent>
 #include "openglwidget.h"
+#include "directionsTypes.h"
 
 class KeyboardHandle : public QObject
 {

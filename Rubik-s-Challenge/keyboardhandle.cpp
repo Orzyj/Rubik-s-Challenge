@@ -13,6 +13,8 @@ KeyboardHandle::~KeyboardHandle()
 
 void KeyboardHandle::keyPressed(const int &key, const Qt::KeyboardModifiers &modifier, OpenGLWidget &widget)
 {
+    Direction dir;
+
     if(modifier & Qt::ControlModifier) {
         if(key == Qt::Key_Left)     widget.onRotateAngelY(ROTATE);
         if(key == Qt::Key_Right)    widget.onRotateAngelY(-ROTATE);
@@ -20,9 +22,15 @@ void KeyboardHandle::keyPressed(const int &key, const Qt::KeyboardModifiers &mod
         if(key == Qt::Key_Down)     widget.onRotateAngelX(ROTATE);
     }
 
-    if (key == Qt::Key_Return || key == Qt::Key_Enter) {
-        widget.changeSelectedOption();
-    }
+    if (key == Qt::Key_Left)  dir = Direction::Left;
+    if (key == Qt::Key_Right) dir = Direction::Right;
+    if (key == Qt::Key_Up)    dir = Direction::Up;
+    if (key == Qt::Key_Down)  dir = Direction::Down;
+
+    if (key == Qt::Key_Return || key == Qt::Key_Enter) dir = Direction::None;
+
+    widget.changeSelectedOption(dir);
+
 }
 
 void KeyboardHandle::keyRelesed(const int &key)
