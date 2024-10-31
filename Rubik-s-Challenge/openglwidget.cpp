@@ -53,6 +53,15 @@ void OpenGLWidget::paintGL()
     groupModelMatrix.rotate(m_rotateAngelCubeX, 1.f, 0.f, 0.f);
     groupModelMatrix.rotate(m_rotateAngelCubeY, 0.f, 1.f, 0.f);
 
+    for(Cube* cube : m_cubes) {
+        cube->isSelected = false;
+    }
+
+    std::vector<short> selectedPositons = m_possibleMoves[m_selectedOption];
+    for(unsigned short position : selectedPositons) {
+        m_cubes[position]->isSelected = true;
+    }
+
     for (Cube* cube : m_cubes) {
         QMatrix4x4 cubeModelMatrix = groupModelMatrix * cube->transformMatrix;
         cubeModelMatrix.translate(cube->position);
@@ -101,7 +110,6 @@ void OpenGLWidget::onNewGame()
     update();
 }
 
-
 void OpenGLWidget::rotate(float& valueAxis, float op_value)
 {
     valueAxis += op_value;
@@ -112,22 +120,11 @@ QVector<Cube *> OpenGLWidget::selectRowOrColumn(float positionValue, char axis)
 {
     QVector<Cube*> selectedCubes;
 
-    auto checkPosition = [](float pos1, float pos2) {
-        qDebug() << pos1 << " " << pos2;
-        return qFuzzyCompare(pos1, pos2);
-    };
-
-    for(Cube* cube : m_cubes) {
-        cube->isSelected = false;
-    }
-
-    for(Cube* cube : m_cubes) {
-        if ((axis == 'x' && checkPosition(cube->position.x(), positionValue)) ||
-            (axis == 'y' && checkPosition(cube->position.y(), positionValue)) ||
-            (axis == 'z' && checkPosition(cube->position.z(), positionValue))) {
-            selectedCubes.push_back(cube);
-            cube->isSelected = true;
-        }
+    std::vector<short> selectedPositons = m_possibleMoves[m_selectedOption];
+    for(unsigned short position : selectedPositons) {
+        m_cubes[position]->isSelected = true;
+        selectedCubes.push_back(m_cubes[position]);
+        qDebug() << position;
     }
 
     return selectedCubes;
@@ -137,6 +134,7 @@ void OpenGLWidget::generateCubes()
 {
     m_cubes.clear();
 
+    m_selectedOption = 0;
     unsigned int id = 0;
 
     for (int x = -1; x <= 1; ++x) {
@@ -149,6 +147,8 @@ void OpenGLWidget::generateCubes()
             }
         }
     }
+
+    update();
 }
 
 void OpenGLWidget::startSmoothRotation(float positionValue, char axis, float angle)
@@ -199,6 +199,17 @@ void OpenGLWidget::rotateRowOrColumn(float positionValue, char axis, float angle
 {
     startSmoothRotation(positionValue, axis, angle);
     moves++;
+}
+
+void OpenGLWidget::changeSelectedOption()
+{
+    m_selectedOption++;
+
+    if(m_selectedOption >= 9)
+        m_selectedOption = 0;
+
+
+    update();
 }
 
 void OpenGLWidget::onRotateAngelX(float x)

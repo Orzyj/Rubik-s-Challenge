@@ -18,10 +18,10 @@ void KeyboardHandle::keyPressed(const int &key, const Qt::KeyboardModifiers &mod
         if(key == Qt::Key_Right)    widget.onRotateAngelY(-ROTATE);
         if(key == Qt::Key_Up)       widget.onRotateAngelX(-ROTATE);
         if(key == Qt::Key_Down)     widget.onRotateAngelX(ROTATE);
-    } else {
-        if(key == Qt::Key_Left)     widget.rotateRowOrColumn(-2.1f, 'x', 90.0f);
-        if(key == Qt::Key_Right)    widget.rotateRowOrColumn(0.0f, 'y', 90.0f);
-        if(key == Qt::Key_Up)       widget.rotateRowOrColumn(2.1f, 'y', 90.0f);
+    }
+
+    if (key == Qt::Key_Return || key == Qt::Key_Enter) {
+        widget.changeSelectedOption();
     }
 }
 

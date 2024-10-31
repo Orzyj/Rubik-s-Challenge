@@ -28,6 +28,7 @@ public:
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
     void rotateRowOrColumn(float positionValue, char axis, float angle);
+    void changeSelectedOption();
 
 public slots:
     void onZoomChanged();
@@ -71,6 +72,21 @@ private:
     void generateCubes();
     void startSmoothRotation(float positionValue, char axis, float angle);
     void rotateCubesSmoothly();
+
+    unsigned short m_selectedOption = 0;
+    std::vector<std::vector<short>> m_possibleMoves {
+        {0, 1, 2, 3, 4, 5, 6, 7, 8},
+        {9, 10, 11, 12, 13, 14, 15, 16, 17},
+        {18, 19, 20, 21, 22, 23, 24, 25, 26},
+
+        {0, 1, 2, 9, 10, 11, 18, 19, 20},
+        {3, 4, 5, 12, 13, 14, 21, 22, 23},
+        {6, 7, 8, 15, 16, 17, 24, 25, 26},
+
+        {2, 11, 20, 5, 14, 23, 8, 17, 26},
+        {1, 10, 19, 4, 13, 22, 7, 16, 25},
+        {0, 9, 18, 3, 12, 21, 6, 15, 24}
+    };
 };
 
 #endif // OPENGLWIDGET_H
