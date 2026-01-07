@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "contextmenuhandler.h"
+#include "historylogger.h"
 
 #include <dwmapi.h>
 
@@ -152,21 +154,32 @@ void MainWindow::onCheckBoxAxisStateChanged(const bool &state)
         m_mouseHandle->setReversalAxisY(state);
 }
 
-void MainWindow::on_btnBackSteps_clicked()
-{
-
-}
-
 void MainWindow::onRightButtonMouse(const QPoint &mousePosition)
 {
+    QMetaObject::Connection csvConnection;
+    QMetaObject::Connection jsonConnection;
     ContextMenuHandler* contextMenuHandler {nullptr};
     contextMenuHandler = new ContextMenuHandler(this);
 
     QMainWindow::connect(contextMenuHandler, &ContextMenuHandler::newGame, m_OpenGLWidget, &OpenGLWidget::onNewGame);
+    csvConnection = QMainWindow::connect(contextMenuHandler, &ContextMenuHandler::exportCSV, [=](){
+        std::vector<TMove> stack = m_OpenGLWidget->getMoveStack();
+        if(!HistoryLogger::exportAsCSV(stack)) qWarning() << tr("Błąd podczas zapisu CSV");
+    });
+
+    jsonConnection = QMainWindow::connect(contextMenuHandler, &ContextMenuHandler::exportJSON, [=](){
+        std::vector<TMove> stack = m_OpenGLWidget->getMoveStack();
+        if(!HistoryLogger::exportAsJSON(stack)) qWarning() << tr("Błąd podczas zapisu CSV");
+    });
+
+
     contextMenuHandler->move(QCursor::pos());
     contextMenuHandler->exec();
 
     QMainWindow::disconnect(contextMenuHandler, &ContextMenuHandler::newGame, m_OpenGLWidget, &OpenGLWidget::onNewGame);
+    QMainWindow::disconnect(csvConnection);
+    QMainWindow::disconnect(jsonConnection);
+
     delete contextMenuHandler;
 }
 

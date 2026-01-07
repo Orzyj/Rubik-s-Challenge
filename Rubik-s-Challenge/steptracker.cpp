@@ -40,15 +40,7 @@ void StepTracker::onAddItem(
 {
     try {
         QList<QStandardItem*> row;
-        QString direction_text;
-
-        switch(direction) {
-            case Direction::Up:    direction_text = "Góra"; break;
-            case Direction::Down:  direction_text = "Dół"; break;
-            case Direction::Left:  direction_text = "Lewo"; break;
-            case Direction::Right: direction_text = "Prawo"; break;
-            case Direction::None:  direction_text = "Brak"; break;
-        }
+        QString direction_text = QString::fromStdString(getMoveText(direction));
 
         row << new QStandardItem(direction_text);
         row << new QStandardItem(QString(axis));

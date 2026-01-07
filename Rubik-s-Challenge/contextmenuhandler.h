@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class ContextMenuHandler;
+    class ContextMenuHandler;
 }
 
 class ContextMenuHandler : public QDialog
@@ -20,6 +20,8 @@ public slots:
 
 signals:
     void newGame();
+    void exportCSV();
+    void exportJSON();
 
 private:
     Ui::ContextMenuHandler *ui;

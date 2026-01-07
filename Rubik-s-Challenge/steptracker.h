@@ -9,6 +9,7 @@
 #include <QHeaderView>
 
 #include "directionsTypes.h"
+#include "TMove.h"
 
 
 class StepTracker : public QTableView

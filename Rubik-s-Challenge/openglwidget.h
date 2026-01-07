@@ -10,21 +10,14 @@
 #include <QTimer>
 #include <QPainter>
 #include <vector>
-#include <random>
 
 #include "cube.h"
 #include "directionsTypes.h"
 #include "steptracker.h"
+#include "TMove.h"
 
 #define DEBUG 1
 
-struct TMove{
-    int id;
-    Direction direction;
-    char axis;
-    float angle;
-    int selectedOption;
-};
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -45,6 +38,9 @@ public:
         float angle,
         bool saveToHistory = true);
     void changeSelectedOption(Direction direction);
+
+    //Getters
+    std::vector<TMove> getMoveStack() { return m_movesStack; };
 
 public slots:
     void onZoomChanged();

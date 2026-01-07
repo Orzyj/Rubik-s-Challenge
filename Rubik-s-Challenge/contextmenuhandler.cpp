@@ -8,6 +8,8 @@ ContextMenuHandler::ContextMenuHandler(QWidget *parent)
     ui->setupUi(this);
 
     QWidget::connect(ui->btnStartAgain, &QPushButton::clicked, this, &ContextMenuHandler::onNewGameButtonClicked);
+    QWidget::connect(ui->btnExportCSV, &QPushButton::clicked, [this](){ emit exportCSV();});
+    QWidget::connect(ui->btnExportJSON, &QPushButton::clicked, [this](){ emit exportJSON(); });
 }
 
 ContextMenuHandler::~ContextMenuHandler()
