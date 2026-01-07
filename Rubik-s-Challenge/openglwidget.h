@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <vector>
+#include <random>
 
 #include "cube.h"
 #include "directionsTypes.h"
@@ -38,7 +39,11 @@ public:
 
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
-    void rotateRowOrColumn(Direction direction, char axis, float angle, bool saveToHistory = true);
+    void rotateRowOrColumn(
+        Direction direction,
+        char axis,
+        float angle,
+        bool saveToHistory = true);
     void changeSelectedOption(Direction direction);
 
 public slots:

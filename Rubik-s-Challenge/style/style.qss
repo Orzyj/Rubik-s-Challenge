@@ -1,0 +1,110 @@
+QMainWindow {
+    background-color: #1e1e1e;
+}
+
+#frameFunctions {
+    background-color: #252525;
+    border-left: 1px solid #3d3d3d;
+    padding: 10px; /* Większy margines wewnętrzny całego panelu */
+}
+
+#frame, #frame_2 {
+    background-color: #2d2d2d;
+    border: 1px solid #3d3d3d;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px; /* Odstęp treści od krawędzi ramki */
+}
+
+QLabel {
+    color: #e0e0e0;
+    font-size: 13px;
+}
+
+#label, #label_2, #o {
+    color: #41cd52;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+QTableView {
+    background-color: #1e1e1e;
+    alternate-background-color: #252525; /* Opcjonalnie: pasy w tabeli */
+    border: 1px solid #3d3d3d;
+    gridline-color: #3d3d3d;
+    outline: none;
+}
+
+QTableView QTableCornerButton::section {
+    background-color: #333333;
+    border: none;
+    border-right: 1px solid #3d3d3d;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+QHeaderView::section:vertical {
+    background-color: #333333;
+    color: #41cd52;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+    border-right: 1px solid #3d3d3d;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+QHeaderView::section:horizontal {
+    background-color: #333333;
+    color: #41cd52;
+    font-weight: bold;
+    border: none;
+    border-right: 1px solid #3d3d3d;
+    border-bottom: 1px solid #3d3d3d;
+    padding: 4px;
+}
+
+QTableView::item {
+    color: #ffffff;
+    padding: 5px;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: #1e1e1e;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #444444;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #41cd52;
+}
+
+QPushButton {
+    background-color: #41cd52;
+    color: #000000;
+    border-radius: 6px;
+    padding: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+QPushButton:hover {
+    background-color: #52e063;
+}
+
+QCheckBox {
+    spacing: 10px;
+    padding: 5px;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+}
