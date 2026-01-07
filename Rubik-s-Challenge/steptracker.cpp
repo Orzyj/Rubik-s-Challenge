@@ -5,6 +5,9 @@ StepTracker::StepTracker(QWidget *parent)
 {
     this->m_model = new QStandardItemModel(0, COLUMNS);
     this->setFocusPolicy(Qt::NoFocus);
+    this->horizontalHeader()->setStretchLastSection(true);
+    this->verticalHeader()->setHighlightSections(false);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     initColumns();
 
 }
@@ -18,7 +21,7 @@ StepTracker::~StepTracker()
 
 void StepTracker::initColumns()
 {
-    std::vector<QString> columns = {"Ruch" , "Oś"};
+    std::vector<QString> columns = {tr("Ruch") , tr("Oś")};
     const float WIDTH = this->width();
 
     for(int i = 0; i < columns.size(); i++) {

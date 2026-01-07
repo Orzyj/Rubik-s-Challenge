@@ -108,3 +108,22 @@ QCheckBox::indicator {
     width: 18px;
     height: 18px;
 }
+
+#frameOpenGL {
+    background-color: #000000;
+    border: 1px solid #3d3d3d;
+    border-radius: 15px;
+    padding: 2px;
+}
+
+#frameFunctions {
+    background-color: #252525;
+    border: 1px solid #3d3d3d;
+    border-radius: 15px;
+    margin: 10px;
+    padding: 10px;
+}
+
+#centralwidget {
+    background-color: #1e1e1e;
+}
