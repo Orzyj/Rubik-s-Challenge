@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <dwmapi.h>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -15,6 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_OpenGLWidget->installEventFilter(m_keyboardHandle);
 
     baseConfiguration();
+
+    //Enable dark
+    BOOL navigationBar = TRUE;
+    HWND hwnd = (HWND)this->winId();
+    DwmSetWindowAttribute(hwnd, 20, &navigationBar, sizeof(navigationBar));
 }
 
 MainWindow::~MainWindow()

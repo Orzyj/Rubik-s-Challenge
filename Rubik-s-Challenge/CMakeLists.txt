@@ -58,6 +58,7 @@ target_link_libraries(Rubik-s-Challenge PRIVATE
     Qt${QT_VERSION_MAJOR}::Gui
     Qt6::OpenGLWidgets
     OpenGL::GL
+    dwmapi
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
