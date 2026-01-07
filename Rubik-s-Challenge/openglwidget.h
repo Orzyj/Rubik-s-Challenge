@@ -9,12 +9,21 @@
 #include <QSurfaceFormat>
 #include <QTimer>
 #include <QPainter>
+#include <vector>
 
 #include "cube.h"
 #include "directionsTypes.h"
+#include "steptracker.h"
 
 #define DEBUG 1
 
+struct TMove{
+    int id;
+    Direction direction;
+    char axis;
+    float angle;
+    int selectedOption;
+};
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -29,12 +38,13 @@ public:
 
     float zoomFactorial() const;
     void setZoomFactorial(float newZoomFactorial);
-    void rotateRowOrColumn(Direction direction, char axis, float angle);
+    void rotateRowOrColumn(Direction direction, char axis, float angle, bool saveToHistory = true);
     void changeSelectedOption(Direction direction);
 
 public slots:
     void onZoomChanged();
     void onNewGame();
+    void onBackButtonClicked();
 
 protected:
     void initializeGL() override;
@@ -44,8 +54,11 @@ protected:
 signals:
     void axisXCorrdinatesChanged(float x);
     void axisYCorrdinatesChanged(float y);
+    void onAddStep(const int&, const Direction&, const char&);
+    void removedLastElement();
 
 private:
+    std::vector<TMove> m_movesStack;
     const int m_samples { 6 };
     float m_zoomFactorial { -15.f };
     QSurfaceFormat m_formatAliasing;

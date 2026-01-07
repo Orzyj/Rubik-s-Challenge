@@ -8,6 +8,9 @@
 #include <QStandardItemModel>
 #include <QHeaderView>
 
+#include "directionsTypes.h"
+
+
 class StepTracker : public QTableView
 {
     Q_OBJECT
@@ -17,12 +20,21 @@ public:
 
 private:
     QStandardItemModel* m_model;
-    const int COLUMNS = 3;
+    const int COLUMNS = 2;
 
     void initColumns();
 
 public slots:
-    void onAddItem(QString itemValue);
+
+    void onAddItem(
+        const int& id,
+        const Direction& direction,
+        const char& axis
+    );
+
+    void back();
+
+
 };
 
 #endif // STEPTRACKER_H

@@ -4,6 +4,7 @@ StepTracker::StepTracker(QWidget *parent)
     : QTableView{parent}
 {
     this->m_model = new QStandardItemModel(0, COLUMNS);
+    this->setFocusPolicy(Qt::NoFocus);
     initColumns();
 
 }
@@ -17,7 +18,7 @@ StepTracker::~StepTracker()
 
 void StepTracker::initColumns()
 {
-    std::vector<QString> columns = {"ID", "Ruch" , "Oś"};
+    std::vector<QString> columns = {"Ruch" , "Oś"};
     const float WIDTH = this->width();
 
     for(int i = 0; i < columns.size(); i++) {
@@ -29,18 +30,39 @@ void StepTracker::initColumns()
     this->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void StepTracker::onAddItem(QString itemValue)
+void StepTracker::onAddItem(
+    const int& id,
+    const Direction& direction,
+    const char& axis)
 {
     try {
         QList<QStandardItem*> row;
-        const int ROW_COUNT = m_model->rowCount();
+        QString direction_text;
 
-        row << new QStandardItem(QString::number(ROW_COUNT));
-        row << new QStandardItem(itemValue);
+        switch(direction) {
+            case Direction::Up:    direction_text = "Góra"; break;
+            case Direction::Down:  direction_text = "Dół"; break;
+            case Direction::Left:  direction_text = "Lewo"; break;
+            case Direction::Right: direction_text = "Prawo"; break;
+            case Direction::None:  direction_text = "Brak"; break;
+        }
 
-        m_model->appendRow(row);
+        row << new QStandardItem(direction_text);
+        row << new QStandardItem(QString(axis));
+
+        this->m_model->appendRow(row);
     }
     catch (const std::bad_alloc& e) {
         qWarning() << "Błąd alokacji pamięci:" << e.what();
+    }
+}
+
+void StepTracker::back()
+{
+    if(m_model == nullptr) return;
+    int rowCount = m_model->rowCount();
+
+    if(rowCount > 0) {
+        m_model->removeRow(rowCount - 1);
     }
 }

@@ -10,6 +10,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
 
     m_rotationTimer = new QTimer(this);
     m_painter = new QPainter(this);
+    m_movesStack.clear();
 
     generateCubes();
 }
@@ -221,10 +222,43 @@ void OpenGLWidget::rotateCubesSmoothly()
     update();
 }
 
-void OpenGLWidget::rotateRowOrColumn(Direction direction, char axis, float angle)
+void OpenGLWidget::onBackButtonClicked()
+{
+    if(!m_movesStack.empty()) {
+        TMove move = m_movesStack.back();
+
+        int currentUserOption = m_selectedOption;
+        m_selectedOption = move.selectedOption;
+
+        m_movesStack.pop_back();
+
+        Direction direction = move.direction;
+        switch(direction) {
+            case Direction::Up:    direction = Direction::Down; break;
+            case Direction::Down:  direction = Direction::Up; break;
+            case Direction::Left:  direction = Direction::Right; break;
+            case Direction::Right: direction = Direction::Left; break;
+            case Direction::None:  direction = Direction::None; break;
+        }
+
+        rotateRowOrColumn(direction, move.axis, -move.angle, false);
+        if(moves > 0) moves--;
+        m_selectedOption = currentUserOption;
+
+        emit removedLastElement();
+        update();
+    }
+}
+
+void OpenGLWidget::rotateRowOrColumn(Direction direction, char axis, float angle, bool saveToHistory)
 {
     startSmoothRotation(direction, axis, angle);
-    moves++;
+    if(saveToHistory) {
+        int id = m_movesStack.size() + 1;
+        m_movesStack.push_back({id, direction, axis, angle, m_selectedOption});
+        emit onAddStep(id, direction, axis);
+        moves++;
+    }
 }
 
 void OpenGLWidget::changeSelectedOption(Direction direction)
@@ -232,7 +266,6 @@ void OpenGLWidget::changeSelectedOption(Direction direction)
     if (direction == Direction::None) {
         m_selectedOption++;
         if (m_selectedOption >= 9) m_selectedOption = 0;
-
         if(m_selectedOption < 3) m_axis = 'x';
         else if(m_selectedOption < 6) m_axis = 'y';
         else m_axis = 'z';

@@ -63,6 +63,9 @@ void MainWindow::baseConfiguration()
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::axisYCorrdinatesChanged, this, &MainWindow::onLabelYTextChanged);
     QMainWindow::connect(ui->chkboxAxisX,&QCheckBox::stateChanged, this, &MainWindow::onCheckBoxAxisStateChanged);
     QMainWindow::connect(ui->chkboxAxisY,&QCheckBox::stateChanged, this, &MainWindow::onCheckBoxAxisStateChanged);
+    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::onAddStep, m_stepTrackerListWidget, &StepTracker::onAddItem);
+    QMainWindow::connect(ui->btnBackSteps, &QPushButton::clicked, m_OpenGLWidget, &OpenGLWidget::onBackButtonClicked);
+    QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::removedLastElement, m_stepTrackerListWidget, &StepTracker::back);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

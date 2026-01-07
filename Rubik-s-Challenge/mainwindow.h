@@ -46,7 +46,6 @@ private:
     MouseHandle* m_mouseHandle {nullptr};
     StepTracker* m_stepTrackerListWidget {nullptr};
 
-
     void baseConfiguration();
     void onRightButtonMouse(const QPoint& mousePosition);
 
