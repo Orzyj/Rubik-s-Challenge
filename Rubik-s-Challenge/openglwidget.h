@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <vector>
+#include <queue>
 
 #include "cube.h"
 #include "directionsTypes.h"
@@ -38,6 +39,7 @@ public:
         float angle,
         bool saveToHistory = true);
     void changeSelectedOption(Direction direction);
+    void shuffle(int movesCount);
 
     //Getters
     std::vector<TMove> getMoveStack() { return m_movesStack; };
@@ -59,6 +61,10 @@ signals:
     void removedLastElement();
 
 private:
+    std::queue<TMove> m_shuffleQueue;
+    bool m_isShuffling {false};
+    float m_normalRotationIncrement;
+
     std::vector<TMove> m_movesStack;
     const int m_samples { 6 };
     float m_zoomFactorial { -15.f };
@@ -88,6 +94,7 @@ private:
     void generateCubes();
     void startSmoothRotation(Direction direction, char axis, float angle);
     void rotateCubesSmoothly();
+    void executeNextShuffleMove();
 
     unsigned short m_selectedOption { 0 };
     char m_axis { 'x' };

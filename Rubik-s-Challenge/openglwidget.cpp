@@ -203,6 +203,9 @@ void OpenGLWidget::rotateCubesSmoothly()
         m_rotationTimer->stop();
         disconnect(m_rotationTimer, &QTimer::timeout, this, &OpenGLWidget::rotateCubesSmoothly);
         m_isAnimationRunning = false;
+
+        if (m_isShuffling) executeNextShuffleMove();
+
         return;
     }
 
@@ -220,6 +223,21 @@ void OpenGLWidget::rotateCubesSmoothly()
     }
 
     update();
+}
+
+void OpenGLWidget::executeNextShuffleMove()
+{
+    if (m_shuffleQueue.empty()) {
+        m_isShuffling = false;
+        m_rotationIncrement = m_normalRotationIncrement;
+        return;
+    }
+
+    TMove nextMove = m_shuffleQueue.front();
+    m_shuffleQueue.pop();
+
+    m_selectedOption = nextMove.selectedOption;
+   rotateRowOrColumn(nextMove.direction, nextMove.axis, nextMove.angle, false);
 }
 
 void OpenGLWidget::onBackButtonClicked()
@@ -283,6 +301,31 @@ void OpenGLWidget::changeSelectedOption(Direction direction)
 
         rotateRowOrColumn(direction, rotationAxis, angle);
     }
+}
+
+void OpenGLWidget::shuffle(int movesCount)
+{
+    if (m_isAnimationRunning || movesCount <= 0) return;
+
+    m_isShuffling = true;
+    m_normalRotationIncrement = m_rotationIncrement;
+    m_rotationIncrement = 15.0f;
+
+    for (int i = 0; i < movesCount; ++i) {
+        int randomOption = rand() % 9;
+        Direction randomDir = (rand() % 2 == 0) ? Direction::Up : Direction::Down;
+        float angle = (randomDir == Direction::Up) ? 90.f : -90.f;
+
+        char axis;
+        if (randomOption < 3) axis = 'x';
+        else if (randomOption < 6) axis = 'y';
+        else axis = 'z';
+
+        m_shuffleQueue.push({0, randomDir, axis, angle, (unsigned short)randomOption});
+    }
+
+    // Uruchom pierwszy ruch
+    executeNextShuffleMove();
 }
 
 void OpenGLWidget::onRotateAngelX(float x)
