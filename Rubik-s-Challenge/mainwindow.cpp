@@ -9,7 +9,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-{
+{  
     ui->setupUi(this);
     this->m_OpenGLWidget = new OpenGLWidget(this);
     this->m_scrollHandle = new ScrollHandle(this);

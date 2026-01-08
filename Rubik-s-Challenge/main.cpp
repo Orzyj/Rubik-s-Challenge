@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])
         w.setStyleSheet(style);
     }
 
-
+    a.setWindowIcon(QIcon(":/assets/icon/icon.png"));
     w.show();
     return a.exec();
 }

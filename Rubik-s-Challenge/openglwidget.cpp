@@ -329,7 +329,6 @@ void OpenGLWidget::shuffle(int movesCount)
         m_shuffleQueue.push({0, randomDir, axis, angle, (unsigned short)randomOption});
     }
 
-    // Uruchom pierwszy ruch
     executeNextShuffleMove();
 }
 
