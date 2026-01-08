@@ -54,6 +54,7 @@ private slots:
     void onLabelXTextChanged(const float& value);
     void onLabelYTextChanged(const float& value);
     void onCheckBoxAxisStateChanged(const bool& state);
+    void onShuffleElements();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

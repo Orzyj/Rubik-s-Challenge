@@ -48,6 +48,7 @@ public slots:
     void onZoomChanged();
     void onNewGame();
     void onBackButtonClicked();
+    void onShuffleElements(int moves);
 
 protected:
     void initializeGL() override;

@@ -268,6 +268,11 @@ void OpenGLWidget::onBackButtonClicked()
     }
 }
 
+void OpenGLWidget::onShuffleElements(int moves)
+{
+    shuffle(moves);
+}
+
 void OpenGLWidget::rotateRowOrColumn(Direction direction, char axis, float angle, bool saveToHistory)
 {
     startSmoothRotation(direction, axis, angle);

@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "contextmenuhandler.h"
 #include "historylogger.h"
+#include <QHBoxLayout>
 
 #include <dwmapi.h>
 
@@ -75,6 +76,13 @@ void MainWindow::baseConfiguration()
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::onAddStep, m_stepTrackerListWidget, &StepTracker::onAddItem);
     QMainWindow::connect(ui->btnBackSteps, &QPushButton::clicked, m_OpenGLWidget, &OpenGLWidget::onBackButtonClicked);
     QMainWindow::connect(m_OpenGLWidget, &OpenGLWidget::removedLastElement, m_stepTrackerListWidget, &StepTracker::back);
+
+    QList<QPushButton*> buttonsShuffle = ui->centralwidget->findChildren<QPushButton*>();
+    for(int i = 0; i < buttonsShuffle.size(); i++) {
+        if(buttonsShuffle[i] && buttonsShuffle[i]->objectName().contains("btnShuffle")) {
+            QMainWindow::connect(buttonsShuffle[i], &QPushButton::clicked, this, &MainWindow::onShuffleElements);
+        }
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -154,6 +162,13 @@ void MainWindow::onCheckBoxAxisStateChanged(const bool &state)
         m_mouseHandle->setReversalAxisY(state);
 }
 
+void MainWindow::onShuffleElements()
+{
+    QPushButton* _sender = static_cast<QPushButton*>(sender());
+    int moves = _sender->text().toInt();
+    m_OpenGLWidget->shuffle(moves);
+}
+
 void MainWindow::onRightButtonMouse(const QPoint &mousePosition)
 {
     QMetaObject::Connection csvConnection;
@@ -171,7 +186,6 @@ void MainWindow::onRightButtonMouse(const QPoint &mousePosition)
         std::vector<TMove> stack = m_OpenGLWidget->getMoveStack();
         if(!HistoryLogger::exportAsJSON(stack)) qWarning() << tr("Błąd podczas zapisu CSV");
     });
-
 
     contextMenuHandler->move(QCursor::pos());
     contextMenuHandler->exec();

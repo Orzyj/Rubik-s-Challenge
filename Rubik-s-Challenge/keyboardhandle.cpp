@@ -42,10 +42,8 @@ bool KeyboardHandle::eventFilter(QObject* obj, QEvent* event)
 {
     OpenGLWidget* widget = dynamic_cast<OpenGLWidget*>(obj);
 
-    if (!widget){
-        qDebug() << "Something went wrong";
+    if (!widget)
         return QObject::eventFilter(obj, event);
-    }
 
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
