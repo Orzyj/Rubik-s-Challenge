@@ -9,7 +9,7 @@
 A 3D interactive Rubik's Cube simulation built with C++, Qt, and OpenGL. This application focuses on realistic physics, smooth animations, and a modular architecture.
 
 <div align="center">
-  <img src="assets/screenshots/gif.gif" alt="Demo aplikacji">
+  <img src="screenshots/gif.gif" alt="Demo aplikacji">
 </div>
 
 ## About
@@ -26,7 +26,7 @@ Rubik's Challenge is a desktop application that renders a fully functional Rubik
 
 
 <div align="center">
-  <img src="assets/screenshots/mainWindow.png" alt="Demo aplikacji">
+  <img src="screenshots/mainWindow.png" alt="Demo aplikacji">
 </div>
 
 ## Architecture
