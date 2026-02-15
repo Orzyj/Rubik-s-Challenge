@@ -56,3 +56,6 @@ To build the project using CMake:
     `cmake ..`
 4.  Compile:
     `cmake --build .`
+
+## Note
+Disclaimer: This project is for educational purposes only.
